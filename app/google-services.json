@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "557478841623",
+    "firebase_url": "https://whereismyfriend-1cd5a.firebaseio.com",
+    "project_id": "whereismyfriend-1cd5a",
+    "storage_bucket": "whereismyfriend-1cd5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557478841623:android:52783b7a37699958",
+        "android_client_info": {
+          "package_name": "com.example.bartosz.whereismyfriend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "557478841623-4h1ve87jf0l5no3hgph3fakkq50f1li1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bartosz.whereismyfriend",
+            "certificate_hash": "14a2db1f8a7739d85a58e3e1e82d2f1fb73861b0"
+          }
+        },
+        {
+          "client_id": "557478841623-o2k2nr4283p2ar7u5n0bkplrv2map141.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYMLw_9jhFMvTn2_HVoLCOwyznQSq6DY8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "557478841623-o2k2nr4283p2ar7u5n0bkplrv2map141.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
