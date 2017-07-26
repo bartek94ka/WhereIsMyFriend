@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(_firebaseAuth.getCurrentUser() != null){
                     String email = _firebaseAuth.getCurrentUser().getEmail();
 //                    DatabaseReference userData = _database.getReference("Users").;
-                    Intent registerIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    Intent registerIntent = new Intent(RegisterActivity.this, WhereIAmActivity.class);
                     RegisterActivity.this.startActivity(registerIntent);
                 }
             }
