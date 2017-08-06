@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,15 +27,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class WhereIAmActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     GoogleMap map;
     LocationManager locationManager;
     GoogleApiClient googleApiClient;
+
+    private GPSTracker gpsTracker;
+    private Location mLocation;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_where_iam);
+
+        gpsTracker = new GPSTracker(getApplicationContext());
+        mLocation = gpsTracker.getLocation();
+
+        latitude = mLocation.getLatitude();
+        longitude = mLocation.getLongitude();
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
@@ -42,46 +54,23 @@ public class WhereIAmActivity extends AppCompatActivity implements OnMapReadyCal
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-
-
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
-        }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean permissionGranted2 = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-
-        if (permissionGranted) {
-            // {Some Code}
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-        }
-
-        if (permissionGranted2) {
-            // {Some Code}
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
-        }
-        map.setMyLocationEnabled(true);
+//        map.
 //        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         Log.println(Log.INFO, "onMapReady", "setMyLocationEnabled(true)");
-        map.getUiSettings().setScrollGesturesEnabled(false);
-        LatLng myLocation = new LatLng(52.406374, 16.9251681);
+        //map.getUiSettings().setScrollGesturesEnabled(false);
+//        LatLng myLocation = new LatLng(52.406374, 16.9251681);
+        LatLng myLocation = new LatLng(latitude, longitude);
         Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
         Poznan.setTag(0);
         Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(500).strokeColor(Color.RED));
         circle.setVisible(true);
         int zoom = getZoomLevel(circle);
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
         //map.setOnMarkerClickListener(this);
         //map.setMyLocationEnabled(true);
     }
@@ -163,24 +152,11 @@ public class WhereIAmActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onLocationChanged(Location location) {
-        //map.clear();
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-        Marker Poznan = map.addMarker(new MarkerOptions().position(currentLocation).title("Moja lokalizacja"));
-        Poznan.setTag(0);
-        Circle circle = map.addCircle(new CircleOptions().center(currentLocation).radius(500).strokeColor(Color.RED));
-        circle.setVisible(true);
-        int zoom = getZoomLevel(circle);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom - 1));
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLocation);
-        markerOptions.title("i'm here");
+        LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
 
-//        map.addMarker(Poznan);
-
-        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17.0f));
-
-        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17.0f));
+        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
