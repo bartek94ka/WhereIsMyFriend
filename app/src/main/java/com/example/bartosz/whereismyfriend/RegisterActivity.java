@@ -49,9 +49,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-
-
         _database = FirebaseDatabase.getInstance();
         _databaseRef = _database.getReference();
         _firebaseAuth = FirebaseAuth.getInstance();
@@ -79,7 +76,6 @@ public class RegisterActivity extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 RegisterUser();
             }
         });
@@ -90,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(_firebaseAuth.getCurrentUser() != null){
                     String email = _firebaseAuth.getCurrentUser().getEmail();
 //                    DatabaseReference userData = _database.getReference("Users").;
+                    Log.d("_authStateListener", "BeforeCreateIntent");
                     Intent registerIntent = new Intent(RegisterActivity.this, WhereIAmActivity.class);
                     RegisterActivity.this.startActivity(registerIntent);
                 }
@@ -127,9 +124,6 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private void AddUserToDb(){
-
-    }
     private boolean IsUserExistsInDatabase(String email)
     {
         Object object = _databaseRef.child("Users").equalTo(email);
@@ -170,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
         _progressBar.setMessage("Registering User...");
         _progressBar.show();
 
-        user = CreateUserObject(email, name, surname, age);
+//        user = CreateUserObject(email, name, surname, age);
 
         try {
             this._firebaseAuth.createUserWithEmailAndPassword(email, password)

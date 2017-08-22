@@ -45,9 +45,11 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
         gpsTracker = new GPSTracker(getApplicationContext());
         mLocation = gpsTracker.getLocation();
 
-        latitude = mLocation.getLatitude();
-        longitude = mLocation.getLongitude();
-
+        if(mLocation != null)
+        {
+            latitude = mLocation.getLatitude();
+            longitude = mLocation.getLongitude();
+        }
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);

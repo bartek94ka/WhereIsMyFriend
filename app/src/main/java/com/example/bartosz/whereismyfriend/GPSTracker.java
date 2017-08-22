@@ -41,28 +41,35 @@ public class GPSTracker extends Service implements LocationListener{
             isGPSEnabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
             isNetworkEnabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
 
+            int permisionGroupLoc = ContextCompat.checkSelfPermission(context, Manifest.permission_group.LOCATION);
+            //int permision1 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
             if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    ){
                 if(isGPSEnabled){
                     if(location==null){
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, this);
                         if(locationManager!=null){
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            return location;
                         }
                     }
                 }
+            }
+            if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
                 if(location==null){
                     if(isNetworkEnabled){
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 10, this);
                         if(locationManager!=null){
                             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            return location;
                         }
                     }
                 }
             }
 
         }catch(Exception ex){
-
+            throw ex;
         }
         return location;
     }
