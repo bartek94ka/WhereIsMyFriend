@@ -32,6 +32,9 @@ public class User {
     public Double Range;
     public int Age;
     public Location CurrentLocation;
+    public double latitude;
+    public double longitude;
+    public String id;
     public Collection<String> FriendsId;
     public Collection<Invitation> RecivedInvitations;
     public Collection<Invitation> SendInvitations;

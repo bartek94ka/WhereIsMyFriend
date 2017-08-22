@@ -77,24 +77,26 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RegisterUser();
+                Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
+                RegisterActivity.this.startActivity(registerIntent);
             }
         });
 
-        _authStateListener = new FirebaseAuth.AuthStateListener(){
+        /*_authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(_firebaseAuth.getCurrentUser() != null){
-                    String email = _firebaseAuth.getCurrentUser().getEmail();
+                    *//*String email = _firebaseAuth.getCurrentUser().getEmail();
 //                    DatabaseReference userData = _database.getReference("Users").;
                     Log.d("_authStateListener", "BeforeCreateIntent");
-                    Intent registerIntent = new Intent(RegisterActivity.this, WhereIAmActivity.class);
-                    RegisterActivity.this.startActivity(registerIntent);
+                    Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
+                    RegisterActivity.this.startActivity(registerIntent);*//*
                 }
             }
-        };
+        };*/
     }
 
-    @Override
+  /*  @Override
     public void onStart(){
         super.onStart();
         _firebaseAuth.addAuthStateListener(_authStateListener);
@@ -105,25 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStop();
         _firebaseAuth.removeAuthStateListener(_authStateListener);
     }
-
-    private User CreateUserObject(String email, String name, String surname, String age)
-    {
-        User newCreatedUser = new User();
-        newCreatedUser.Range = 1000.0;
-        newCreatedUser.Age = Integer.parseInt(age);
-        newCreatedUser.Email = email;
-        newCreatedUser.Name = name;
-        newCreatedUser.Surname = surname;
-        newCreatedUser.FullName = name + ' ' + surname;
-//        newCreatedUser.CurrentLocation
-        return newCreatedUser;
-    }
-
-    private boolean IsRegisterFormValid(String email, String password, String confirmPassword, String name, String surname, String age)
-    {
-        return false;
-    }
-
+*/
     private boolean IsUserExistsInDatabase(String email)
     {
         Object object = _databaseRef.child("Users").equalTo(email);
@@ -139,16 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         final String email = etEmail.getText().toString().trim();
         final String password = etPassword.getText().toString().trim();
-        String confirmpassword = etConfirmPassword.getText().toString().trim();
-        final String name = etName.getText().toString().trim();
-        final String surname = etName.getText().toString().trim();
-        final String age = etName.getText().toString().trim();
-
-        if(IsUserExistsInDatabase(email) == true)
-        {
-
-        }
-
 
         if(TextUtils.isEmpty(email))
         {
@@ -164,7 +138,6 @@ public class RegisterActivity extends AppCompatActivity {
         _progressBar.setMessage("Registering User...");
         _progressBar.show();
 
-//        user = CreateUserObject(email, name, surname, age);
 
         try {
             this._firebaseAuth.createUserWithEmailAndPassword(email, password)

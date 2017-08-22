@@ -12,9 +12,14 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.bartosz.whereismyfriend.Models.User;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +31,19 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     GoogleMap map;
@@ -34,8 +52,28 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
 
     private GPSTracker gpsTracker;
     private Location mLocation;
+    private FirebaseDatabase database;
+    private FirebaseAuth _firebaseAuth;
     double latitude;
     double longitude;
+
+    private static final String LOG_TAG = "MainActivity";
+    public static final GeoLocation CURRENT_LOCATION = new GeoLocation(26.128536, -80.130648);
+
+//    private DatabaseReference database;
+    private GeoFire geofire;
+    private Set<GeoQuery> geoQueries = new HashSet<>();
+
+    private List<User> users = new ArrayList<>();
+    private ValueEventListener userValueListener;
+    private boolean fetchedUserIds;
+    private Set<String> userIdsWithListeners = new HashSet<>();
+
+    private RecyclerView.Adapter adapter;
+    private int initialListSize;
+    private int iterationCount;
+    private Location me;
+    private Map<String, Location> userIdsToLocations = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +94,24 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        database = FirebaseDatabase.getInstance();
+        _firebaseAuth = FirebaseAuth.getInstance();
+        String currentUserId = _firebaseAuth.getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference()
+                .child("geofire")
+                .child(currentUserId)
+                .child("l").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                double latitude = dataSnapshot.child("0").getValue(Double.class);
+                double longitude = dataSnapshot.child("1").getValue(Double.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
