@@ -99,12 +99,11 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
         String currentUserId = _firebaseAuth.getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference()
                 .child("geofire")
-                .child(currentUserId)
-                .child("l").addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                double latitude = dataSnapshot.child("0").getValue(Double.class);
-                double longitude = dataSnapshot.child("1").getValue(Double.class);
+                double latitude = dataSnapshot.child("Latitude").getValue(Double.class);
+                double longitude = dataSnapshot.child("Longitude").getValue(Double.class);
             }
 
             @Override

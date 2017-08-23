@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 user.Email = "mkaczorowski@whereismyfriend.com";
                 user.SendInvitations = null;
                 user.RecivedInvitations = null;
-                user.CurrentLocation = location;
                 user.Range = 3000.0;
 
                 //DatabaseReference myData = _databaseRef.child("Users").child("mkaczorowski").getRef();//.setValue(user);

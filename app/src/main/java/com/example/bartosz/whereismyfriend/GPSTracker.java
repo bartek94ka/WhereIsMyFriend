@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
 
-import java.security.Permission;
-
 /**
  * Created by Bartosz on 06.08.2017.
  */
@@ -41,8 +39,6 @@ public class GPSTracker extends Service implements LocationListener{
             isGPSEnabled = locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
             isNetworkEnabled = locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER);
 
-            int permisionGroupLoc = ContextCompat.checkSelfPermission(context, Manifest.permission_group.LOCATION);
-            //int permision1 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
             if(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     ){
                 if(isGPSEnabled){

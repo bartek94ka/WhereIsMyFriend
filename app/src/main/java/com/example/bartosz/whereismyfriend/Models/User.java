@@ -9,6 +9,20 @@ import java.util.Collection;
 public class User {
     public User(){}
     public User(String userName, String email, String password, String name, String surname,
+                Double range, int age){
+        UserName = userName;
+        Email = email;
+        Password = password;
+        Name = name;
+        Surname = surname;
+        FullName = name + " " + surname;
+        Range = range;
+        Age = age;
+        FriendsId = null;
+        RecivedInvitations = null;
+        SendInvitations = null;
+    }
+    public User(String userName, String email, String password, String name, String surname,
                 Double range, int age, Location currentLocation){
         UserName = userName;
         Email = email;
@@ -18,7 +32,6 @@ public class User {
         FullName = name + " " + surname;
         Range = range;
         Age = age;
-        CurrentLocation = currentLocation;
         FriendsId = null;
         RecivedInvitations = null;
         SendInvitations = null;
@@ -31,9 +44,6 @@ public class User {
     public String FullName;
     public Double Range;
     public int Age;
-    public Location CurrentLocation;
-    public double latitude;
-    public double longitude;
     public String id;
     public Collection<String> FriendsId;
     public Collection<Invitation> RecivedInvitations;

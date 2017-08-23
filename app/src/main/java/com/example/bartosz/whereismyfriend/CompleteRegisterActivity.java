@@ -2,11 +2,11 @@ package com.example.bartosz.whereismyfriend;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +29,8 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     private DatabaseReference _databaseRef;
     private FirebaseAuth.AuthStateListener _authStateListener;
     private ProgressDialog _progressBar;
+    private GPSTracker gpsTracker;
+    private Location mLocation;
 
     private EditText etName;
     private EditText etSurname;
@@ -59,7 +61,7 @@ public class CompleteRegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(RegisterUser() == true){
                     Intent registerIntent = new Intent(CompleteRegisterActivity.this, WhereIAmActivity.class);
-//                    CompleteRegisterActivity.this.startActivity(registerIntent);
+                    CompleteRegisterActivity.this.startActivity(registerIntent);
                 }
             }
         });
@@ -94,8 +96,8 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     private Boolean RegisterUser(){
 
         final String name = etName.getText().toString().trim();
-        final String surname = etName.getText().toString().trim();
-        final String age = etName.getText().toString().trim();
+        final String surname = etSurname.getText().toString().trim();
+        final String age = etAge.getText().toString().trim();
 
         if(TextUtils.isEmpty(name))
         {
@@ -107,7 +109,6 @@ public class CompleteRegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter surname", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         if(TextUtils.isEmpty(age))
         {
             Toast.makeText(this, "Please enter age", Toast.LENGTH_SHORT).show();
@@ -121,7 +122,16 @@ public class CompleteRegisterActivity extends AppCompatActivity {
         String email = _firebaseAuth.getCurrentUser().getEmail();
         User newUser = CreateUserObject(email, name, surname, age);
         try {
-            _database.getReference().child("users").child(userId).setValue(newUser)
+            gpsTracker = new GPSTracker(getApplicationContext());
+            mLocation = gpsTracker.getLocation();
+            double latitude = mLocation.getLatitude();
+            double longitude = mLocation.getLongitude();
+            final com.example.bartosz.whereismyfriend.Models.Location location =
+                    new com.example.bartosz.whereismyfriend.Models.Location();
+            location.Latitude = latitude;
+            location.Longitude = longitude;
+
+            _database.getReference().child("Users").child(userId).setValue(newUser)
                     .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -132,8 +142,10 @@ public class CompleteRegisterActivity extends AppCompatActivity {
                             {
                                 Toast.makeText(CompleteRegisterActivity.this, "Could not register. Please try again", Toast.LENGTH_SHORT).show();
                             }
+                            _progressBar.hide();
                         }
                     });
+            _database.getReference().child("geofire").child(userId).setValue(location);
         }catch (Exception ex){
             System.out.print(ex.getMessage());
         }
@@ -144,11 +156,14 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     {
         User newCreatedUser = new User();
         newCreatedUser.Range = 1000.0;
-//        newCreatedUser.Age = Integer.parseInt(age);
+        newCreatedUser.Age = Integer.valueOf(age);
         newCreatedUser.Email = email;
         newCreatedUser.Name = name;
         newCreatedUser.Surname = surname;
         newCreatedUser.FullName = name + ' ' + surname;
+        newCreatedUser.FriendsId = null;
+        newCreatedUser.SendInvitations = null;
+        newCreatedUser.RecivedInvitations = null;
         return newCreatedUser;
     }
 }
