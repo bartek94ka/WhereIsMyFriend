@@ -11,9 +11,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
@@ -45,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class WhereIAmActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     GoogleMap map;
     LocationManager locationManager;
     GoogleApiClient googleApiClient;
@@ -75,10 +78,21 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
     private Location me;
     private Map<String, Location> userIdsToLocations = new HashMap<>();
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToogle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_where_iam);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mToogle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+
+        mDrawerLayout.addDrawerListener(mToogle);
+        mToogle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         gpsTracker = new GPSTracker(getApplicationContext());
         mLocation = gpsTracker.getLocation();
@@ -114,12 +128,21 @@ public class WhereIAmActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mToogle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 //        map.
 //        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         Log.println(Log.INFO, "onMapReady", "setMyLocationEnabled(true)");
-        //map.getUiSettings().setScrollGesturesEnabled(false);
+        map.getUiSettings().setScrollGesturesEnabled(false);
 //        LatLng myLocation = new LatLng(52.406374, 16.9251681);
         LatLng myLocation = new LatLng(latitude, longitude);
         Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
