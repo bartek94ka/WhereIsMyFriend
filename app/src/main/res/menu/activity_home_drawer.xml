@@ -3,13 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_mylocation"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="MyLocation" />
-        <item
             android:id="@+id/home"
             android:icon="@drawable/ic_menu_manage"
             android:title="Home" />
+        <item
+            android:id="@+id/nav_mylocation"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="My Location" />
+        >
+        <item android:id="@+id/nav_logout"
+            android:icon="@mipmap/ic_settings_power_black_24dp"
+            android:title="Log Out"/>
     </group>
 
     <item android:title="Communicate">

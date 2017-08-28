@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +60,7 @@ public class MyLocation extends AppCompatActivity
     private Location mLocation;
     private FirebaseDatabase database;
     private FirebaseAuth _firebaseAuth;
+    private FirebaseAuth.AuthStateListener _authStateListener;
     double latitude;
     double longitude;
 
@@ -121,6 +123,7 @@ public class MyLocation extends AppCompatActivity
 
         database = FirebaseDatabase.getInstance();
         _firebaseAuth = FirebaseAuth.getInstance();
+
         String currentUserId = _firebaseAuth.getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference()
                 .child("geofire")
@@ -136,6 +139,29 @@ public class MyLocation extends AppCompatActivity
 
             }
         });
+
+        _authStateListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(_firebaseAuth.getCurrentUser() == null){
+                    Intent loginIntent = new Intent(MyLocation.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                }
+            }
+        };
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        _firebaseAuth.addAuthStateListener(_authStateListener);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        _firebaseAuth.removeAuthStateListener(_authStateListener);
     }
 
     @Override
@@ -183,6 +209,8 @@ public class MyLocation extends AppCompatActivity
         } else if (id == R.id.home) {
             Intent intent = new Intent(MyLocation.this, Home.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout){
+            _firebaseAuth.signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

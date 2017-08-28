@@ -2,6 +2,7 @@ package com.example.bartosz.whereismyfriend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -14,12 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
     NavigationView navigationView;
     Toolbar toolbar=null;
+    private FirebaseAuth.AuthStateListener _authStateListener;
+    private FirebaseAuth _firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,30 @@ public class Home extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        _firebaseAuth = FirebaseAuth.getInstance();
+
+        _authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(_firebaseAuth.getCurrentUser() == null){
+                    Intent loginIntent = new Intent(Home.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        _firebaseAuth.addAuthStateListener(_authStateListener);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        _firebaseAuth.removeAuthStateListener(_authStateListener);
     }
 
     @Override
@@ -91,6 +121,8 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.home) {
             Intent intent = new Intent(Home.this, Home.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout){
+            _firebaseAuth.signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
