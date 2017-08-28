@@ -3,7 +3,6 @@
 
     <item android:id="@+id/nav_account"
         android:icon="@mipmap/ic_person_black_24dp"
-        android:onClick=""
         android:title="My Account"/>
 
     <item android:id="@+id/nav_settings"
