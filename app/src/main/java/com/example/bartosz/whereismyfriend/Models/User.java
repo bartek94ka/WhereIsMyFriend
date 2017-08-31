@@ -6,7 +6,7 @@ import java.util.Collection;
  * Created by Bartosz on 01.04.2017.
  */
 
-public class User {
+public class User{
     public User(){}
     public User(String userName, String email, String password, String name, String surname,
                 Double range, int age){

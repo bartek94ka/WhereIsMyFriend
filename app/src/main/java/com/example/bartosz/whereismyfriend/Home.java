@@ -41,7 +41,6 @@ public class Home extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -117,12 +116,15 @@ public class Home extends AppCompatActivity
         if (id == R.id.nav_mylocation) {
             Intent intent = new Intent(Home.this, MyLocation.class);
             startActivity(intent);
+            Home.this.finish();
             // Handle the camera action
         } else if (id == R.id.home) {
             Intent intent = new Intent(Home.this, Home.class);
             startActivity(intent);
+            Home.this.finish();
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
+            Home.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

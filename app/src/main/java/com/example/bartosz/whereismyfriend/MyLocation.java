@@ -26,6 +26,7 @@ import com.example.bartosz.whereismyfriend.Models.User;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,13 +37,18 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,14 +67,16 @@ public class MyLocation extends AppCompatActivity
     private FirebaseDatabase database;
     private FirebaseAuth _firebaseAuth;
     private FirebaseAuth.AuthStateListener _authStateListener;
+    GeoFire _geoFire;
     double latitude;
     double longitude;
+    private User currentUser;
+    private MapFragment mapFragment;
 
     private static final String LOG_TAG = "MainActivity";
     public static final GeoLocation CURRENT_LOCATION = new GeoLocation(26.128536, -80.130648);
 
     //    private DatabaseReference database;
-    private GeoFire geofire;
     private Set<GeoQuery> geoQueries = new HashSet<>();
 
     private List<User> users = new ArrayList<>();
@@ -88,7 +96,6 @@ public class MyLocation extends AppCompatActivity
         setContentView(R.layout.activity_my_location);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,36 +116,26 @@ public class MyLocation extends AppCompatActivity
 
         gpsTracker = new GPSTracker(getApplicationContext());
         mLocation = gpsTracker.getLocation();
-
         if(mLocation != null)
         {
             latitude = mLocation.getLatitude();
             longitude = mLocation.getLongitude();
         }
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         database = FirebaseDatabase.getInstance();
         _firebaseAuth = FirebaseAuth.getInstance();
-
         String currentUserId = _firebaseAuth.getCurrentUser().getUid();
-        FirebaseDatabase.getInstance().getReference()
-                .child("geofire")
-                .child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                double latitude = dataSnapshot.child("Latitude").getValue(Double.class);
-                double longitude = dataSnapshot.child("Longitude").getValue(Double.class);
-            }
+        getCurrentUserData(currentUserId);
+        DatabaseReference ref = database.getReference("geofire");
+        _geoFire = new GeoFire(ref);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        setupFirebase();
 
-            }
-        });
+        //fetchUsers();
+
+        setCurrentUserLocation(currentUserId);
 
         _authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -149,7 +146,58 @@ public class MyLocation extends AppCompatActivity
                 }
             }
         };
+    }
 
+    private void setCurrentUserLocation(String currentUserId)
+    {
+        _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude),
+                new GeoFire.CompletionListener() {
+
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            System.err.println("There was an error saving the location to GeoFire: " + error);
+                        } else {
+                            System.out.println("Location saved on server successfully!");
+                        }
+                    }
+                });
+    }
+
+    private void getCurrentUserData(String currentUserId)
+    {
+        database.getReference("Users").child(currentUserId).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        currentUser = dataSnapshot.getValue(User.class);
+                        fetchUsers();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private Task<User> getUserData(String userId)
+    {
+        final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
+        database.getReference("Users").child(userId).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        taskCompletionSource.setResult(user);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        return taskCompletionSource.getTask();
     }
 
     @Override
@@ -205,12 +253,15 @@ public class MyLocation extends AppCompatActivity
         if (id == R.id.nav_mylocation) {
             Intent intent = new Intent(MyLocation.this, MyLocation.class);
             startActivity(intent);
+            MyLocation.this.finish();
             // Handle the camera action
         } else if (id == R.id.home) {
             Intent intent = new Intent(MyLocation.this, Home.class);
             startActivity(intent);
+            MyLocation.this.finish();
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
+            MyLocation.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -221,18 +272,18 @@ public class MyLocation extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-//        map.
-//        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        Log.println(Log.INFO, "onMapReady", "setMyLocationEnabled(true)");
-        map.getUiSettings().setScrollGesturesEnabled(false);
+        //map.getUiSettings().setScrollGesturesEnabled(false);
+
 //        LatLng myLocation = new LatLng(52.406374, 16.9251681);
         LatLng myLocation = new LatLng(latitude, longitude);
-        Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
-        Poznan.setTag(0);
+        //Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
+        //Poznan.setTag(0);
         Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(500).strokeColor(Color.RED));
         circle.setVisible(true);
         int zoom = getZoomLevel(circle);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
+        //fetchUsers();
+
         //map.setOnMarkerClickListener(this);
         //map.setMyLocationEnabled(true);
     }
@@ -245,5 +296,104 @@ public class MyLocation extends AppCompatActivity
             zoomLevel = (int) (16 - Math.log(scale) / Math.log(2));
         }
         return zoomLevel;
+    }
+
+    private void fetchUsers(){
+        GeoQuery geoQuery = _geoFire.queryAtLocation(new GeoLocation(latitude, longitude), currentUser.Range);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+                if(key == currentUser.id){
+                    return;
+                }
+                /*boolean isEnteredUserFriend = currentUser.FriendsId.contains(key);
+                if(isEnteredUserFriend == false){
+                    return;
+                }*/
+
+
+                //User user = getUserData(key).getResult();
+
+                Location loc = new Location("to");
+                loc.setLatitude(location.latitude);
+                loc.setLongitude(location.longitude);
+                final LatLng userLocation = new LatLng(location.latitude, location.longitude);
+                /*map.addMarker(new MarkerOptions().position(userLocation).
+                                title(user.FullName).
+                                snippet(user.Email + " " + user.Age)
+                                );*/
+                getUserData(key).addOnCompleteListener(new OnCompleteListener<User>() {
+                    @Override
+                    public void onComplete(@NonNull Task<User> task) {
+                        User user = task.getResult();
+                        map.addMarker(new MarkerOptions().position(userLocation).
+                                title(user.FullName).
+                                snippet(user.Email + " " + user.Age)
+                        );
+                    }
+                });
+                if (!fetchedUserIds) {
+                    userIdsToLocations.put(key, loc);
+                } else {
+                    userIdsToLocations.put(key, loc);
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                Log.d(LOG_TAG, "onKeyExited: ");
+                if (userIdsWithListeners.contains(key)) {
+                    int position = getUserPosition(key);
+                    users.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                Log.d(LOG_TAG, "onKeyMoved: ");
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                Log.d(LOG_TAG, "onGeoQueryReady: ");
+                initialListSize = userIdsToLocations.size();
+                if (initialListSize == 0) {
+                    fetchedUserIds = true;
+                }
+                iterationCount = 0;
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                Log.e(LOG_TAG, "onGeoQueryError: ", error.toException());
+            }
+        });
+        geoQueries.add(geoQuery);
+    }
+
+    private void setupFirebase() {
+        DatabaseReference ref = database.getReference("geofire");
+        _geoFire = new GeoFire(ref);
+    }
+
+    private int b (User u) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).id.equals(u.id)) {
+                Log.d(LOG_TAG, "getIndexOfNewUser: " + i);
+                return i;
+            }
+        }
+        throw new RuntimeException();
+    }
+
+    private int getUserPosition(String id) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).id.equals(id)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

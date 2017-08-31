@@ -60,8 +60,9 @@ public class CompleteRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(RegisterUser() == true){
-                    Intent registerIntent = new Intent(CompleteRegisterActivity.this, WhereIAmActivity.class);
+                    Intent registerIntent = new Intent(CompleteRegisterActivity.this, MyLocation.class);
                     CompleteRegisterActivity.this.startActivity(registerIntent);
+                    CompleteRegisterActivity.this.finish();
                 }
             }
         });

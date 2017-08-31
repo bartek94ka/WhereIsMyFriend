@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -75,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         Intent loginIntent = new Intent(LoginActivity.this, Home.class);
                         startActivity(loginIntent);
+                        LoginActivity.this.finish();
                     }
                 }
             }
@@ -109,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        progressBar = new ProgressDialog(this);
         progressBar.setMessage("Loging user...");
         progressBar.show();
 
@@ -119,7 +123,18 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Login Failed. Please try again", Toast.LENGTH_SHORT).show();
+                            try{
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthInvalidUserException invalidEmail){
+                                Toast.makeText(LoginActivity.this, "Invalid email", Toast.LENGTH_SHORT).show();
+                            }
+                            catch (FirebaseAuthInvalidCredentialsException wrongPassword){
+                                Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                            }
+                            catch (Exception ex){
+                                Toast.makeText(LoginActivity.this, "Login Failed. Please try again", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         progressBar.hide();
                     }
