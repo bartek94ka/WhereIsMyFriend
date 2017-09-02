@@ -266,6 +266,10 @@ public class MyLocation extends AppCompatActivity
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
             MyLocation.this.finish();
+        }else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(MyLocation.this, SearchAllUsers.class);
+            startActivity(intent);
+            MyLocation.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

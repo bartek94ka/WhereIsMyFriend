@@ -27,4 +27,5 @@
     <string name="Home">Home</string>
     <string name="MyLocation">My Location</string>
     <string name="title_activity_my_friend_location">MyFriendLocation</string>
+    <string name="title_activity_search_all_users">SearchAllUsers</string>
 </resources>

@@ -263,8 +263,12 @@ public class MyFriendLocation extends AppCompatActivity
             Intent intent = new Intent(MyFriendLocation.this, MyFriendLocation.class);
             startActivity(intent);
             MyFriendLocation.this.finish();
-        }else if (id == R.id.nav_logout){
+        } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
+            MyFriendLocation.this.finish();
+        } else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(MyFriendLocation.this, SearchAllUsers.class);
+            startActivity(intent);
             MyFriendLocation.this.finish();
         }
 
