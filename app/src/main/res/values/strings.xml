@@ -23,9 +23,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_home">Home</string>
-    <string name="title_activity_my_location">MyLocation</string>
+    <string name="title_activity_my_location">My Location</string>
     <string name="Home">Home</string>
     <string name="MyLocation">My Location</string>
-    <string name="title_activity_my_friend_location">MyFriendLocation</string>
-    <string name="title_activity_search_all_users">SearchAllUsers</string>
+    <string name="title_activity_my_friend_location">My Frien dLocation</string>
+    <string name="title_activity_search_all_users">Search All Users</string>
 </resources>
