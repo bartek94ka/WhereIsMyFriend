@@ -1,5 +1,6 @@
 package com.example.bartosz.whereismyfriend.Models;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -7,45 +8,26 @@ import java.util.Collection;
  */
 
 public class User{
-    public User(){}
-    public User(String userName, String email, String password, String name, String surname,
-                Double range, int age){
-        UserName = userName;
-        Email = email;
-        Password = password;
-        Name = name;
-        Surname = surname;
-        FullName = name + " " + surname;
-        Range = range;
-        Age = age;
-        FriendsId = null;
-        RecivedInvitations = null;
-        SendInvitations = null;
-    }
-    public User(String userName, String email, String password, String name, String surname,
-                Double range, int age, Location currentLocation){
-        UserName = userName;
-        Email = email;
-        Password = password;
-        Name = name;
-        Surname = surname;
-        FullName = name + " " + surname;
-        Range = range;
-        Age = age;
-        FriendsId = null;
-        RecivedInvitations = null;
-        SendInvitations = null;
-    }
-    public String UserName;
     public String Email;
-    public String Password;
     public String Name;
     public String Surname;
     public String FullName;
     public Double Range;
     public int Age;
-    public String id;
     public Collection<String> FriendsId;
     public Collection<Invitation> RecivedInvitations;
     public Collection<Invitation> SendInvitations;
+
+    public User(){}
+    public User(String name, String surname,
+                Double range, int age){
+        Name = name;
+        Surname = surname;
+        FullName = name + " " + surname;
+        Range = range;
+        Age = age;
+        FriendsId = new ArrayList<>();
+        RecivedInvitations = new ArrayList<>();
+        SendInvitations = new ArrayList<>();
+    }
 }

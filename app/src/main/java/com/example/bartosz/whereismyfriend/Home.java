@@ -122,6 +122,10 @@ public class Home extends AppCompatActivity
             Intent intent = new Intent(Home.this, Home.class);
             startActivity(intent);
             Home.this.finish();
+        } else if(id == R.id.nav_myfriendlocation){
+            Intent intent = new Intent(Home.this, MyFriendLocation.class);
+            startActivity(intent);
+            Home.this.finish();
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
             Home.this.finish();

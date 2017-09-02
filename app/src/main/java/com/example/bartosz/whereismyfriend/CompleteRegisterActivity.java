@@ -152,19 +152,9 @@ public class CompleteRegisterActivity extends AppCompatActivity {
         }
         return true;
     }
-
     private User CreateUserObject(String email, String name, String surname, String age)
     {
-        User newCreatedUser = new User();
-        newCreatedUser.Range = 1000.0;
-        newCreatedUser.Age = Integer.valueOf(age);
-        newCreatedUser.Email = email;
-        newCreatedUser.Name = name;
-        newCreatedUser.Surname = surname;
-        newCreatedUser.FullName = name + ' ' + surname;
-        newCreatedUser.FriendsId = null;
-        newCreatedUser.SendInvitations = null;
-        newCreatedUser.RecivedInvitations = null;
+        User newCreatedUser = new User(name, surname, 1000.0, Integer.valueOf(age));
         return newCreatedUser;
     }
 }

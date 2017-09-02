@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MyLocation extends AppCompatActivity
+public class MyFriendLocation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     GoogleMap map;
@@ -141,7 +141,7 @@ public class MyLocation extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(_firebaseAuth.getCurrentUser() == null){
-                    Intent loginIntent = new Intent(MyLocation.this, LoginActivity.class);
+                    Intent loginIntent = new Intent(MyFriendLocation.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
             }
@@ -251,21 +251,21 @@ public class MyLocation extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
-            Intent intent = new Intent(MyLocation.this, MyLocation.class);
+            Intent intent = new Intent(MyFriendLocation.this, MyFriendLocation.class);
             startActivity(intent);
-            MyLocation.this.finish();
+            MyFriendLocation.this.finish();
             // Handle the camera action
         } else if (id == R.id.home) {
-            Intent intent = new Intent(MyLocation.this, Home.class);
+            Intent intent = new Intent(MyFriendLocation.this, Home.class);
             startActivity(intent);
-            MyLocation.this.finish();
+            MyFriendLocation.this.finish();
         } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(MyLocation.this, MyFriendLocation.class);
+            Intent intent = new Intent(MyFriendLocation.this, MyFriendLocation.class);
             startActivity(intent);
-            MyLocation.this.finish();
-        } else if (id == R.id.nav_logout){
+            MyFriendLocation.this.finish();
+        }else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
-            MyLocation.this.finish();
+            MyFriendLocation.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -382,17 +382,7 @@ public class MyLocation extends AppCompatActivity
         _geoFire = new GeoFire(ref);
     }
 
-    /*private int b (User u) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).id.equals(u.id)) {
-                Log.d(LOG_TAG, "getIndexOfNewUser: " + i);
-                return i;
-            }
-        }
-        throw new RuntimeException();
-    }
-
-    private int getUserPosition(String id) {
+    /*private int getUserPosition(String id) {
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).id.equals(id)) {
                 return i;
