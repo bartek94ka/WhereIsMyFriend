@@ -28,4 +28,7 @@
     <string name="MyLocation">My Location</string>
     <string name="title_activity_my_friend_location">My Frien dLocation</string>
     <string name="title_activity_search_all_users">Search All Users</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
