@@ -58,10 +58,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listview_users"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:dividerHeight="10dp"
+            android:divider="#d1d1d1"></ListView>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

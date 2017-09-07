@@ -22,27 +22,25 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseDatabase _database;
     private FirebaseAuth _firebaseAuth;
     private DatabaseReference _databaseRef;
-    private FirebaseAuth.AuthStateListener _authStateListener;
     private ProgressDialog _progressBar;
 
     private EditText etEmail;
     private EditText etPassword;
     private EditText etConfirmPassword;
-    private EditText etName;
-    private EditText etSurname;
-    private EditText etAge;
 
     private Button buttonRegister;
     private TextView tvLoginLink;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +56,6 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.regEmail);
         etPassword = (EditText) findViewById(R.id.regPassword);
         etConfirmPassword = (EditText) findViewById(R.id.regConfirmPassword);
-        etName = (EditText) findViewById(R.id.regName);
-        etSurname = (EditText) findViewById(R.id.regSurname);
-        etAge = (EditText) findViewById(R.id.regAge);
 
         buttonRegister = (Button) findViewById(R.id.regButton);
         tvLoginLink = (TextView) findViewById(R.id.regLoginHere);
@@ -70,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent registerIntent = new Intent(RegisterActivity.this, LoginActivity.class);
                 RegisterActivity.this.startActivity(registerIntent);
+                RegisterActivity.this.finish();
             }
         });
 
@@ -79,45 +75,9 @@ public class RegisterActivity extends AppCompatActivity {
                 RegisterUser();
                 Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
                 RegisterActivity.this.startActivity(registerIntent);
+                RegisterActivity.this.finish();
             }
         });
-
-        /*_authStateListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(_firebaseAuth.getCurrentUser() != null){
-                    *//*String email = _firebaseAuth.getCurrentUser().getEmail();
-//                    DatabaseReference userData = _database.getReference("Users").;
-                    Log.d("_authStateListener", "BeforeCreateIntent");
-                    Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
-                    RegisterActivity.this.startActivity(registerIntent);*//*
-                }
-            }
-        };*/
-    }
-
-  /*  @Override
-    public void onStart(){
-        super.onStart();
-        _firebaseAuth.addAuthStateListener(_authStateListener);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        _firebaseAuth.removeAuthStateListener(_authStateListener);
-    }
-*/
-    private boolean IsUserExistsInDatabase(String email)
-    {
-        Object object = _databaseRef.child("Users").equalTo(email);
-        if(object == null)
-        {
-            return false;
-        }
-        else{
-            return true;
-        }
     }
     private void RegisterUser(){
 

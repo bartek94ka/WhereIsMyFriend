@@ -327,10 +327,19 @@ public class MyFriendLocation extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<User> task) {
                         User user = task.getResult();
-                        map.addMarker(new MarkerOptions().position(userLocation).
-                                title(user.FullName).
-                                snippet(user.Email + " " + user.Age)
-                        );
+                        if(user != null){
+                            if(user.FullName != null && user.Email != null){
+                                map.addMarker(new MarkerOptions().position(userLocation).
+                                        title(user.FullName).
+                                        snippet("Email: " + user.Email + ", Age: " + user.Age)
+                                );
+                            } else if(user.FullName != null){
+                                map.addMarker(new MarkerOptions().position(userLocation).
+                                        title(user.FullName).
+                                        snippet("Age: " + user.Age)
+                                );
+                            }
+                        }
                     }
                 });
                 if (!fetchedUserIds) {

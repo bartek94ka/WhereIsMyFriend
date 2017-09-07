@@ -117,6 +117,7 @@ public class MyLocation extends AppCompatActivity
         mapFragment.getMapAsync(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         database = FirebaseDatabase.getInstance();
+
         _firebaseAuth = FirebaseAuth.getInstance();
         String currentUserId = _firebaseAuth.getCurrentUser().getUid();
         getCurrentUserData(currentUserId);

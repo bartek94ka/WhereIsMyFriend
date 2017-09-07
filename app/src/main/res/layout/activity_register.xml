@@ -1,135 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.bartosz.whereismyfriend.RegisterActivity"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
+    android:fitsSystemWindows="true"
+    tools:context="com.example.bartosz.whereismyfriend.RegisterActivity">
 
-    <EditText
-        android:id="@+id/regAge"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Age"
-        android:inputType="textPersonName"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/regSurname"
-        android:layout_marginTop="9dp"
-        app:layout_constraintTop_toBottomOf="@+id/regSurname"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/regSurname"
-        app:layout_constraintHorizontal_bias="0.0" />
-
-    <EditText
-        android:id="@+id/regEmail"
-        android:layout_width="321dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="31dp"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/regPassword"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <EditText
-        android:id="@+id/regPassword"
-        android:layout_width="321dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="31dp"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="70dp"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <EditText
-        android:id="@+id/regConfirmPassword"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/regPassword"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/regPassword"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/regPassword" />
-
-    <EditText
-        android:id="@+id/regName"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/regConfirmPassword"
-        android:layout_marginTop="9dp"
-        app:layout_constraintTop_toBottomOf="@+id/regConfirmPassword"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/regConfirmPassword" />
-
-    <EditText
-        android:id="@+id/regSurname"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Surname"
-        android:inputType="textPersonName"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/regName"
-        android:layout_marginTop="9dp"
-        app:layout_constraintTop_toBottomOf="@+id/regName"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/regName" />
-
-    <Button
-        android:id="@+id/regButton"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:text="Register"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/regAge"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/regAge"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/regAge" />
-
-    <TextView
-        android:id="@+id/regLoginHere"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/registerUser"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/regEmail"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textPersonName"/>
 
-        android:text="Login Here"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regButton"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-</android.support.constraint.ConstraintLayout>
+        <EditText
+            android:id="@+id/regPassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:id="@+id/regConfirmPassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:id="@+id/regButton"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:id="@+id/regLoginHere"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login Here"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
