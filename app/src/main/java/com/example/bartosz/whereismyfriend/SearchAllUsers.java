@@ -225,7 +225,6 @@ public class SearchAllUsers extends AppCompatActivity
             Intent intent = new Intent(SearchAllUsers.this, MyLocation.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
-            // Handle the camera action
         } else if (id == R.id.home) {
             Intent intent = new Intent(SearchAllUsers.this, Home.class);
             startActivity(intent);
@@ -236,6 +235,10 @@ public class SearchAllUsers extends AppCompatActivity
             SearchAllUsers.this.finish();
         } else if(id == R.id.search_all_users) {
             Intent intent = new Intent(SearchAllUsers.this, SearchAllUsers.class);
+            startActivity(intent);
+            SearchAllUsers.this.finish();
+        } else if (id == R.id.settings){
+            Intent intent = new Intent(SearchAllUsers.this, Settings.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
         } else if (id == R.id.nav_logout){

@@ -251,7 +251,6 @@ public class MyFriendLocation extends AppCompatActivity
             Intent intent = new Intent(MyFriendLocation.this, MyFriendLocation.class);
             startActivity(intent);
             MyFriendLocation.this.finish();
-            // Handle the camera action
         } else if (id == R.id.home) {
             Intent intent = new Intent(MyFriendLocation.this, Home.class);
             startActivity(intent);
@@ -262,6 +261,10 @@ public class MyFriendLocation extends AppCompatActivity
             MyFriendLocation.this.finish();
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
+            MyFriendLocation.this.finish();
+        } else if (id == R.id.settings){
+            Intent intent = new Intent(MyFriendLocation.this, Settings.class);
+            startActivity(intent);
             MyFriendLocation.this.finish();
         } else if(id == R.id.search_all_users) {
             Intent intent = new Intent(MyFriendLocation.this, SearchAllUsers.class);

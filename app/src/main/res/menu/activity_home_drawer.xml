@@ -16,6 +16,9 @@
         <item android:id="@+id/nav_myfriendlocation"
             android:icon="@mipmap/ic_settings_power_black_24dp"
             android:title="Find Friend Location"/>
+        <item android:id="@+id/settings"
+            android:icon="@mipmap/ic_settings_power_black_24dp"
+            android:title="Settings"/>
         <item android:id="@+id/nav_logout"
             android:icon="@mipmap/ic_settings_power_black_24dp"
             android:title="Log Out"/>
