@@ -33,11 +33,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".UserAreaActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -46,7 +41,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBUut8V6_T2MOIJq4_JzXv5u3m6slcAJZA" />
 
-        <activity android:name=".WhereIAmActivity" />
         <activity android:name=".CompleteRegisterActivity" />
         <activity
             android:name=".Home"

@@ -328,10 +328,12 @@ public class MyLocation extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<User> task) {
                         User user = task.getResult();
-                        map.addMarker(new MarkerOptions().position(userLocation).
-                                title(user.FullName).
-                                snippet(user.Email + " " + user.Age)
-                        );
+                        if(user != null){
+                            map.addMarker(new MarkerOptions().position(userLocation).
+                                    title(user.FullName).
+                                    snippet(user.Email + " " + user.Age)
+                            );
+                        }
                     }
                 });
                 if (!fetchedUserIds) {
