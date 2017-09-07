@@ -164,6 +164,11 @@ public class MyLocation extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         currentUser = dataSnapshot.getValue(User.class);
+                        LatLng myLocation = new LatLng(latitude, longitude);
+                        Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED));
+                        circle.setVisible(true);
+                        int zoom = getZoomLevel(circle);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
                         fetchUsers();
                     }
 
@@ -276,13 +281,10 @@ public class MyLocation extends AppCompatActivity
         //map.getUiSettings().setScrollGesturesEnabled(false);
 
 //        LatLng myLocation = new LatLng(52.406374, 16.9251681);
-        LatLng myLocation = new LatLng(latitude, longitude);
+
         //Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
         //Poznan.setTag(0);
-        Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(500).strokeColor(Color.RED));
-        circle.setVisible(true);
-        int zoom = getZoomLevel(circle);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
+
         //fetchUsers();
 
         //map.setOnMarkerClickListener(this);

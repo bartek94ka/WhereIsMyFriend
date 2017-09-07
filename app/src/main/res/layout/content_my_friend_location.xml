@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="150dp"
         android:gravity="center"
-        android:text="My Friend Location"
+        android:text="Friend location"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="162dp"
         tools:layout_editor_absoluteY="246dp"/>

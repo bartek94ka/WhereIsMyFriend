@@ -163,6 +163,11 @@ public class MyFriendLocation extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         currentUser = dataSnapshot.getValue(User.class);
+                        LatLng myLocation = new LatLng(latitude, longitude);
+                        Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED));
+                        circle.setVisible(true);
+                        int zoom = getZoomLevel(circle);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
                         fetchUsers();
                     }
 
