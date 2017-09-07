@@ -48,6 +48,7 @@ public class SearchAllUsers extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth _firebaseAuth;
+    private FirebaseDatabase database;
     private ListView _listViewUser;
     private UserListAdapter _userListAdapter;
     private List<User> userList;
@@ -61,7 +62,7 @@ public class SearchAllUsers extends AppCompatActivity
     private EditText _searchSurname;
     private EditText _searchAge;
 
-    private FirebaseDatabase database;
+
 
     private String name;
     private String surname;
@@ -196,7 +197,7 @@ public class SearchAllUsers extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.search_all_users, menu);
+        getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
