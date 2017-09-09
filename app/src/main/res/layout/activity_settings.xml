@@ -16,25 +16,17 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_home_drawer" />
-    
+
     <LinearLayout
         android:id="@+id/settings"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <include
             layout="@layout/app_bar_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <SeekBar
-            android:id="@+id/settingsSetRange"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10000"/>
 
         <EditText
             android:id="@+id/settingsName"
@@ -69,8 +61,17 @@
             android:inputType="number"
             android:hint="Age"/>
 
+        <SeekBar
+            android:id="@+id/settingsSetRange"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10000"/>
+
         <Button
-            android:id="@+id/settingsSave"
+            android:id="@+id/settingsSaveButton"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,7 +114,16 @@
             android:inputType="textPassword"
             android:hint="Confirm New Password"/>
 
-
+        <Button
+            android:id="@+id/settingsChangePasswordButton"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Password"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
     </LinearLayout>
 
 
