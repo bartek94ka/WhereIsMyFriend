@@ -1,6 +1,8 @@
 package com.example.bartosz.whereismyfriend;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,6 +45,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import static android.R.id.list;
 
@@ -94,6 +103,15 @@ public class SearchAllUsers extends AppCompatActivity
         _searchButton = (Button) findViewById(R.id.searchButton);
         _searchFullName = (EditText) findViewById(R.id.searchFullName);
 
+        SetSearchButtonAction();
+
+        _userListAdapter = new UserListAdapter(getApplicationContext(), userList);
+        _listViewUser.setAdapter(_userListAdapter);
+
+        SetListViewSetOnScrollListener();
+    }
+
+    private void SetSearchButtonAction(){
         _searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,10 +124,9 @@ public class SearchAllUsers extends AppCompatActivity
                 }
             }
         });
+    }
 
-        _userListAdapter = new UserListAdapter(getApplicationContext(), userList);
-        _listViewUser.setAdapter(_userListAdapter);
-
+    private void SetListViewSetOnScrollListener(){
         _listViewUser.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -157,10 +174,10 @@ public class SearchAllUsers extends AppCompatActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot child : dataSnapshot.getChildren()){
                             User user = child.getValue(User.class);
-
                             boolean isContatin = user.FullName.contains(fullName);
                             boolean isMyUser = child.getKey().equals(_firebaseAuth.getCurrentUser().getUid());
                             if(isContatin == true && isMyUser == false){
+                                user.Id = child.getKey();
                                 list.add(user);
                             }
                         }
@@ -253,6 +270,7 @@ public class SearchAllUsers extends AppCompatActivity
                 case 1:
                     //Update data adapter and UI
                     _userListAdapter.addListItemToAdapter((ArrayList<User>)msg.obj);
+                    userList.addAll((ArrayList<User>)msg.obj);
                     //Remove loading view after update listview
                     _listViewUser.removeFooterView(_view);
                     isLoading=false;

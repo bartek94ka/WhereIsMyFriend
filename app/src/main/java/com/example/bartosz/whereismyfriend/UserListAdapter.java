@@ -10,6 +10,8 @@ import com.example.bartosz.whereismyfriend.Models.User;
 import com.example.bartosz.whereismyfriend.R;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -30,6 +32,19 @@ public class UserListAdapter extends BaseAdapter {
         _users.addAll(list);
         //Notify UI
         this.notifyDataSetChanged();
+    }
+
+    public List<User> GetUserList(){
+        return _users;
+    }
+
+    public User GetUser(String id){
+        for (User user: _users) {
+            if(user.Id == id){
+                return user;
+            }
+        }
+        return null;
     }
 
     public void ClearList(){
@@ -54,13 +69,13 @@ public class UserListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = View.inflate(_context, R.layout.item_user_list, null);
-        TextView tvName = (TextView)v.findViewById(R.id.tv_name);
-        TextView tvPrice = (TextView)v.findViewById(R.id.tv_price);
-        TextView tvDescription = (TextView)v.findViewById(R.id.tv_description);
+        TextView itemName = (TextView)v.findViewById(R.id.item_name);
+        TextView itemSurname = (TextView)v.findViewById(R.id.item_surname);
+        TextView itemAge = (TextView)v.findViewById(R.id.item_age);
         //Set text for TextView
-        tvName.setText(_users.get(position).Name);
-        tvPrice.setText(String.valueOf(_users.get(position).Surname));
-        tvDescription.setText(_users.get(position).FullName);
+        itemName.setText(_users.get(position).Name);
+        itemSurname.setText(String.valueOf(_users.get(position).Surname));
+        //itemAge.setText(String.valueOf(_users.get(position).Age));
 
         //Save product id to tag
         v.setTag(_users.get(position));

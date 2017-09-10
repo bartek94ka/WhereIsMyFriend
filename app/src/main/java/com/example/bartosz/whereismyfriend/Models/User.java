@@ -8,6 +8,7 @@ import java.util.Collection;
  */
 
 public class User{
+    public String Id;
     public String Email;
     public String Name;
     public String Surname;
