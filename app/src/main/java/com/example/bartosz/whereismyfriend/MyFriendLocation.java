@@ -72,6 +72,7 @@ public class MyFriendLocation extends AppCompatActivity
     double longitude;
     private User currentUser;
     private MapFragment mapFragment;
+    private boolean HasDataBeenLoaded = false;
 
     private static final String LOG_TAG = "MainActivity";
     public static final GeoLocation CURRENT_LOCATION = new GeoLocation(26.128536, -80.130648);
@@ -125,8 +126,6 @@ public class MyFriendLocation extends AppCompatActivity
 
         setupFirebase();
 
-        //fetchUsers();
-
         setCurrentUserLocation(currentUserId);
 
         _authStateListener = new FirebaseAuth.AuthStateListener(){
@@ -140,8 +139,7 @@ public class MyFriendLocation extends AppCompatActivity
         };
     }
 
-    private void setCurrentUserLocation(String currentUserId)
-    {
+    private void setCurrentUserLocation(String currentUserId) {
         _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude),
                 new GeoFire.CompletionListener() {
 
@@ -156,8 +154,7 @@ public class MyFriendLocation extends AppCompatActivity
                 });
     }
 
-    private void getCurrentUserData(String currentUserId)
-    {
+    private void getCurrentUserData(String currentUserId) {
         database.getReference("Users").child(currentUserId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
@@ -178,15 +175,17 @@ public class MyFriendLocation extends AppCompatActivity
                 });
     }
 
-    private Task<User> getUserData(String userId)
-    {
+    private Task<User> getUserData(String userId) {
         final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
         database.getReference("Users").child(userId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        taskCompletionSource.setResult(user);
+                        if(HasDataBeenLoaded == false){
+                            HasDataBeenLoaded = true;
+                            taskCompletionSource.setResult(user);
+                        }
                     }
 
                     @Override
@@ -195,18 +194,6 @@ public class MyFriendLocation extends AppCompatActivity
                     }
                 });
         return taskCompletionSource.getTask();
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        _firebaseAuth.addAuthStateListener(_authStateListener);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        _firebaseAuth.removeAuthStateListener(_authStateListener);
     }
 
     @Override
@@ -280,20 +267,6 @@ public class MyFriendLocation extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        //map.getUiSettings().setScrollGesturesEnabled(false);
-
-//        LatLng myLocation = new LatLng(52.406374, 16.9251681);
-        LatLng myLocation = new LatLng(latitude, longitude);
-        //Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
-        //Poznan.setTag(0);
-        Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(500).strokeColor(Color.RED));
-        circle.setVisible(true);
-        int zoom = getZoomLevel(circle);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
-        //fetchUsers();
-
-        //map.setOnMarkerClickListener(this);
-        //map.setMyLocationEnabled(true);
     }
 
     private int getZoomLevel(Circle circle){

@@ -72,6 +72,7 @@ public class MyLocation extends AppCompatActivity
     double longitude;
     private User currentUser;
     private MapFragment mapFragment;
+    private boolean HasDataBeenLoaded = false;
 
     private static final String LOG_TAG = "MainActivity";
     public static final GeoLocation CURRENT_LOCATION = new GeoLocation(26.128536, -80.130648);
@@ -187,7 +188,10 @@ public class MyLocation extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        taskCompletionSource.setResult(user);
+                        if(HasDataBeenLoaded == false){
+                            HasDataBeenLoaded = true;
+                            taskCompletionSource.setResult(user);
+                        }
                     }
 
                     @Override
@@ -281,17 +285,6 @@ public class MyLocation extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        //map.getUiSettings().setScrollGesturesEnabled(false);
-
-//        LatLng myLocation = new LatLng(52.406374, 16.9251681);
-
-        //Marker Poznan = map.addMarker(new MarkerOptions().position(myLocation).title("Moja lokalizacja"));
-        //Poznan.setTag(0);
-
-        //fetchUsers();
-
-        //map.setOnMarkerClickListener(this);
-        //map.setMyLocationEnabled(true);
     }
 
     private int getZoomLevel(Circle circle){
