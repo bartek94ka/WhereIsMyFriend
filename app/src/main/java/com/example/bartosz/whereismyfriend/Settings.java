@@ -1,8 +1,11 @@
 package com.example.bartosz.whereismyfriend;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.widget.Toast;
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.AuthCredential;
@@ -34,10 +39,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class Settings extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,11 +61,13 @@ public class Settings extends AppCompatActivity
     private EditText _settingsSurname;
     private EditText _settingsAge;
     private SeekBar _settingsSetRange;
+    private Button _settingsSaveButton;
 
     private EditText _settingsOldPassword;
     private EditText _settingsNewPassword;
     private EditText _settingsConfirmPassword;
     private Button _settingsChangePasswordButton;
+    private boolean HasDataBeenLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,14 @@ public class Settings extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        InitializeLocalVeribles();
+        SetChangePasswordButtonAction();
+        FillBasicUserData();
+        SetBasicUserDataButtonAction();
+    }
+
+    private void InitializeLocalVeribles(){
         _firebaseAuth = FirebaseAuth.getInstance();
         _database = FirebaseDatabase.getInstance();
         _currentUser = _firebaseAuth.getCurrentUser();
@@ -83,14 +102,12 @@ public class Settings extends AppCompatActivity
         _settingsSurname = (EditText) findViewById(R.id.settingsSurname);
         _settingsAge = (EditText) findViewById(R.id.settingsAge);
         _settingsSetRange = (SeekBar) findViewById(R.id.settingsSetRange);
+        _settingsSaveButton = (Button) findViewById(R.id.settingsSaveButton);
+
         _settingsOldPassword = (EditText) findViewById(R.id.settingsOldPassword);
         _settingsNewPassword = (EditText) findViewById(R.id.settingsNewPassword);
         _settingsConfirmPassword = (EditText) findViewById(R.id.settingsConfirmNewPassword);
         _settingsChangePasswordButton = (Button) findViewById(R.id.settingsChangePasswordButton);
-
-        SetChangePasswordButtonAction();
-        FillBasicUserData();
-        SetBasicUserDataButtonAction();
     }
 
     private void FillBasicUserData(){
@@ -110,15 +127,17 @@ public class Settings extends AppCompatActivity
         });
     }
 
-    private Task<User> getUserData(String userId)
-    {
+    private Task<User> getUserData(String userId) {
         final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
         _database.getReference("Users").child(userId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        taskCompletionSource.setResult(user);
+                        if(HasDataBeenLoaded == false){
+                            HasDataBeenLoaded = true;
+                            taskCompletionSource.setResult(user);
+                        }
                     }
 
                     @Override
@@ -129,8 +148,63 @@ public class Settings extends AppCompatActivity
         return taskCompletionSource.getTask();
     }
 
-    private void SetBasicUserDataButtonAction(){
+    private void UpdateFirebaseUserData(String userId, String name, String surname, int age, double range){
+        if(IsDataCorrect(name, surname, age, range)){
+            _user.Name = name;
+            _user.Surname = surname;
+            _user.Age = age;
+            _user.Range = range;
+            _user.FullName = name + " " + surname;
+            Map<String,Object> taskMap = new HashMap<String,Object>();
+            taskMap.put(_currentUser.getUid(), _user);
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.updateChildren(taskMap);
+        }
+    }
 
+    private void SetBasicUserDataButtonAction(){
+        try{
+            _settingsSaveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                final String name = _settingsName.getText().toString().trim();
+                final String surname = _settingsSurname.getText().toString().trim();
+                String ageString = _settingsAge.getText().toString().trim();
+                final int age = Integer.valueOf(ageString);
+                int rangeInt = _settingsSetRange.getProgress();
+                final double range = Double.valueOf(String.valueOf(rangeInt));
+                if(IsDataCorrect(name, surname, age, range) == true){
+                    Thread thread = new ThreadUpdateData();
+                    thread.start();
+                }
+                }
+            });
+        }
+        catch(Exception ex){
+            Log.d("SetBasicUserDataAction", ex.getMessage());
+        }
+
+    }
+
+    private Boolean IsDataCorrect(String name, String surname, int age, double range){
+        //final TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        if(name.isEmpty()){
+            Toast.makeText(Settings.this, "Name can not be empty!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(surname.isEmpty()){
+            Toast.makeText(Settings.this, "Surname can not be empty!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(age < 1 && age > 99){
+            Toast.makeText(Settings.this, "Age must be between 1-99!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(range < 1.0 || range > 10000.0){
+            Toast.makeText(Settings.this, "Range must be between 1-10000 meters!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void SetChangePasswordButtonAction(){
@@ -268,5 +342,18 @@ public class Settings extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public class ThreadUpdateData extends Thread {
+        @Override
+        public void run() {
+            final String name = _settingsName.getText().toString().trim();
+            final String surname = _settingsSurname.getText().toString().trim();
+            String ageString = _settingsAge.getText().toString().trim();
+            final int age = Integer.valueOf(ageString);
+            int rangeInt = _settingsSetRange.getProgress();
+            final double range = Double.valueOf(String.valueOf(rangeInt));
+            UpdateFirebaseUserData(_currentUser.getUid(), name, surname, age, range);
+        }
     }
 }
