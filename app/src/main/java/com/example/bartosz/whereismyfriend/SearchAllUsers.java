@@ -58,15 +58,9 @@ public class SearchAllUsers extends AppCompatActivity
     public int currentId=11;
 
     private Button _searchButton;
-    private EditText _searchName;
-    private EditText _searchSurname;
-    private EditText _searchAge;
+    private EditText _searchFullName;
 
-
-
-    private String name;
-    private String surname;
-    private String age;
+    private String fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +92,12 @@ public class SearchAllUsers extends AppCompatActivity
         //pobranie danych
 
         _searchButton = (Button) findViewById(R.id.searchButton);
-        _searchName = (EditText) findViewById(R.id.searchName);
-        _searchSurname = (EditText) findViewById(R.id.searchSurname);
-        _searchAge = (EditText) findViewById(R.id.searchAge);
+        _searchFullName = (EditText) findViewById(R.id.searchFullName);
 
         _searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name = _searchName.getText().toString().trim();
-                surname = _searchSurname.getText().toString().trim();
-                age = _searchAge.getText().toString().trim();
+                fullName = _searchFullName.getText().toString().trim();
                 boolean isValid = ValidateForm();
                 if(isValid){
                     _userListAdapter.ClearList();
@@ -148,9 +138,9 @@ public class SearchAllUsers extends AppCompatActivity
     }
 
     private boolean ValidateForm(){
-        if(TextUtils.isEmpty(name) && TextUtils.isEmpty(surname) && TextUtils.isEmpty(age))
+        if(TextUtils.isEmpty(fullName))
         {
-            Toast.makeText(this, "Fields can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Field can not be empty", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -168,8 +158,9 @@ public class SearchAllUsers extends AppCompatActivity
                         for (DataSnapshot child : dataSnapshot.getChildren()){
                             User user = child.getValue(User.class);
 
-                            boolean equals = user.Name.equals(name);
-                            if(equals == true){
+                            boolean isContatin = user.FullName.contains(fullName);
+                            boolean isMyUser = child.getKey().equals(_firebaseAuth.getCurrentUser().getUid());
+                            if(isContatin == true && isMyUser == false){
                                 list.add(user);
                             }
                         }
@@ -275,24 +266,20 @@ public class SearchAllUsers extends AppCompatActivity
     public class ThreadGetMoreData extends Thread {
         @Override
         public void run() {
-            //Add footer view after get data
-            //Search more data
-            final ArrayList<User> lstResult;
             getUserData().addOnCompleteListener(new OnCompleteListener<ArrayList<User>>() {
                 @Override
                 public void onComplete(@NonNull Task<ArrayList<User>> task) {
                     _handler.sendEmptyMessage(0);
                     ArrayList<User> lstResult = task.getResult();
                     Message msg = _handler.obtainMessage(1, lstResult);
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     _handler.sendMessage(msg);
                 }
             });
-            //Delay time to show loading footer when debug, remove it when release
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
