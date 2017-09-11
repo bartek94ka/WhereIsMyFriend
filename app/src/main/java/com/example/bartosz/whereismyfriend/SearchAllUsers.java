@@ -69,6 +69,9 @@ public class SearchAllUsers extends AppCompatActivity
     private Button _searchButton;
     private EditText _searchFullName;
 
+    private Button _inviteUserButton;
+    private Button _userDetailsButton;
+
     private String fullName;
 
     @Override
@@ -99,16 +102,25 @@ public class SearchAllUsers extends AppCompatActivity
         userList = new ArrayList<>();
 
         //pobranie danych
-
         _searchButton = (Button) findViewById(R.id.searchButton);
         _searchFullName = (EditText) findViewById(R.id.searchFullName);
+
 
         SetSearchButtonAction();
 
         _userListAdapter = new UserListAdapter(getApplicationContext(), userList);
         _listViewUser.setAdapter(_userListAdapter);
 
+        _listViewUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Do something
+                //Ex: display msg with product id get from view.getTag
+                Toast.makeText(getApplicationContext(), "Clicked product id =" + view.getTag(), Toast.LENGTH_SHORT).show();
+            }
+        });
         SetListViewSetOnScrollListener();
+
     }
 
     private void SetSearchButtonAction(){
@@ -136,6 +148,7 @@ public class SearchAllUsers extends AppCompatActivity
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
+                int a = totalItemCount;
                 //Check when scroll to last item in listview, in this tut, init data in listview = 10 item
 /*
                 if(view.getLastVisiblePosition() == totalItemCount-1 && _listViewUser.getCount() >=10 && isLoading == false)
@@ -290,11 +303,11 @@ public class SearchAllUsers extends AppCompatActivity
                     _handler.sendEmptyMessage(0);
                     ArrayList<User> lstResult = task.getResult();
                     Message msg = _handler.obtainMessage(1, lstResult);
-                    try {
+                    /*try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     _handler.sendMessage(msg);
                 }
             });

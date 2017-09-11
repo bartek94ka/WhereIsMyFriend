@@ -6,6 +6,9 @@ package com.example.bartosz.whereismyfriend.Models;
 
 public class Invitation {
     public Invitation(){}
+    public Invitation(String userId){
+        UserId = userId;
+    }
     public String UserId;
     public int Status;
 }

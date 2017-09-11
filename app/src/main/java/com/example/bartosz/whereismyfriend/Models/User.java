@@ -2,6 +2,7 @@ package com.example.bartosz.whereismyfriend.Models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Bartosz on 01.04.2017.
@@ -15,9 +16,9 @@ public class User{
     public String FullName;
     public Double Range;
     public int Age;
-    public Collection<String> FriendsId;
-    public Collection<Invitation> RecivedInvitations;
-    public Collection<Invitation> SendInvitations;
+    public List<String> FriendsId;
+    public List<String> RecivedInvitations;
+    public List<String> SendInvitations;
 
     public User(){}
     public User(String name, String surname,

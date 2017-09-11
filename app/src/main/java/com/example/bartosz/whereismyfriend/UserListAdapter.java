@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.example.bartosz.whereismyfriend.R;
@@ -31,6 +33,11 @@ public class UserListAdapter extends BaseAdapter {
         //Add list to current array list of data
         _users.addAll(list);
         //Notify UI
+        this.notifyDataSetChanged();
+    }
+
+    public void deleteListItem(User user){
+        _users.remove(user);
         this.notifyDataSetChanged();
     }
 
@@ -67,11 +74,26 @@ public class UserListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = View.inflate(_context, R.layout.item_user_list, null);
         TextView itemName = (TextView)v.findViewById(R.id.item_name);
         TextView itemSurname = (TextView)v.findViewById(R.id.item_surname);
         TextView itemAge = (TextView)v.findViewById(R.id.item_age);
+        Button inviteButton = (Button)v.findViewById(R.id.item_invite);
+        if(inviteButton != null){
+            inviteButton.setTag(_users.get(position).Id);
+            inviteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String id = (String) v.getTag();
+                    User user = GetUser(id);
+                    deleteListItem(user);
+                    Toast.makeText(_context, "Invitation has been sended", Toast.LENGTH_SHORT).show();
+                    InvitationManager manager = new InvitationManager();
+                    manager.SendInvitation(id);
+                }
+            });
+        }
         //Set text for TextView
         itemName.setText(_users.get(position).Name);
         itemSurname.setText(String.valueOf(_users.get(position).Surname));
