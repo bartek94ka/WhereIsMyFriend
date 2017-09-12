@@ -41,6 +41,7 @@ public class InvitationManager {
     }
 
     public void SendInvitation(User targetUser){
+        taskMap.clear();
         _targetUser = targetUser;
         if(_targetUser.RecivedInvitations == null){
             _targetUser.RecivedInvitations = new ArrayList<String>();
@@ -50,7 +51,9 @@ public class InvitationManager {
         Thread thread = new ThreadUpdateData();
         thread.start();
     }
+    
     public void SendInvitation(final String targetUserId){
+        taskMap.clear();
         Task task1 = GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
@@ -82,6 +85,34 @@ public class InvitationManager {
                 }
             }
         });
+    }
+
+    public void AcceptInvitation(User myUser, User userToAccept){
+        taskMap.clear();
+        if(myUser.FriendsId == null){
+            myUser.FriendsId = new ArrayList<String>();
+        }
+        if(userToAccept.FriendsId == null){
+            userToAccept.FriendsId = new ArrayList<String>();
+        }
+        myUser.FriendsId.add(userToAccept.Id);
+        userToAccept.FriendsId.add(myUser.Id);
+        myUser.RecivedInvitations.remove(userToAccept.Id);
+        userToAccept.SendInvitations.remove(myUser.Id);
+        taskMap.put(userToAccept.Id, userToAccept);
+        taskMap.put(myUser.Id, myUser);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.updateChildren(taskMap);
+    }
+
+    public void RejectInvitation(User myUser, User userToReject){
+        taskMap.clear();
+        myUser.RecivedInvitations.remove(userToReject.Id);
+        userToReject.SendInvitations.remove(myUser.Id);
+        taskMap.put(userToReject.Id, userToReject);
+        taskMap.put(myUser.Id, myUser);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.updateChildren(taskMap);
     }
 
     private Task<User> GetUserData(String userId) {

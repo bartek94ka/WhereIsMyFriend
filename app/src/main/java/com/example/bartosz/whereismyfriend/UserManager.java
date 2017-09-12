@@ -129,7 +129,7 @@ public class UserManager {
         }
     }
 
-    private Boolean IsUserRegisterCompleted(final Context context, String name, String surname, String age){
+    public Boolean IsUserRegisterCompleted(final Context context, String name, String surname, String age){
 
         final ProgressDialog progressDialog = new ProgressDialog(context);
 
