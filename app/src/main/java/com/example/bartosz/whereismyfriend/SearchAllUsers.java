@@ -37,6 +37,7 @@ import java.util.List;
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,6 +62,8 @@ public class SearchAllUsers extends AppCompatActivity
     private ListView _listViewUser;
     private UserListAdapter _userListAdapter;
     private List<User> userList;
+    private User _currentUser;
+    private UserManager _userManager;
     public Handler _handler;
     public View _view;
     public boolean isLoading = false;
@@ -107,6 +110,14 @@ public class SearchAllUsers extends AppCompatActivity
 
 
         SetSearchButtonAction();
+
+        _userManager = new UserManager();
+        _userManager.getUserData(_firebaseAuth.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                _currentUser = user;
+            }
+        });
 
         _userListAdapter = new UserListAdapter(getApplicationContext(), userList);
         _listViewUser.setAdapter(_userListAdapter);
@@ -188,7 +199,22 @@ public class SearchAllUsers extends AppCompatActivity
                             User user = child.getValue(User.class);
                             boolean isContatin = user.FullName.contains(fullName);
                             boolean isMyUser = child.getKey().equals(_firebaseAuth.getCurrentUser().getUid());
-                            if(isContatin == true && isMyUser == false){
+                            boolean isInvitationSend = false;
+                            boolean isInvitationRecived = false;
+                            boolean isFriend = false;
+                            if(_currentUser != null){
+                                if(_currentUser.SendInvitations != null){
+                                    isInvitationSend = _currentUser.SendInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.RecivedInvitations != null){
+                                    isInvitationRecived = _currentUser.RecivedInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.FriendsId != null){
+                                    isFriend = _currentUser.FriendsId.contains(child.getKey());
+                                }
+                            }
+                            if(isContatin == true && isMyUser == false && isInvitationSend == false &&
+                                    isInvitationRecived == false && isFriend == false){
                                 user.Id = child.getKey();
                                 list.add(user);
                             }
@@ -283,7 +309,6 @@ public class SearchAllUsers extends AppCompatActivity
                 case 1:
                     //Update data adapter and UI
                     _userListAdapter.addListItemToAdapter((ArrayList<User>)msg.obj);
-                    userList.addAll((ArrayList<User>)msg.obj);
                     //Remove loading view after update listview
                     _listViewUser.removeFooterView(_view);
                     isLoading=false;

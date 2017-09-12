@@ -32,4 +32,17 @@ public class User{
         RecivedInvitations = new ArrayList<>();
         SendInvitations = new ArrayList<>();
     }
+
+    public User(String email, String name, String surname,
+                Double range, int age){
+        Email = email;
+        Name = name;
+        Surname = surname;
+        FullName = name + " " + surname;
+        Range = range;
+        Age = age;
+        FriendsId = new ArrayList<>();
+        RecivedInvitations = new ArrayList<>();
+        SendInvitations = new ArrayList<>();
+    }
 }
