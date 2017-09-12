@@ -180,9 +180,8 @@ public class SearchAllUsers extends AppCompatActivity
     {
         final TaskCompletionSource<ArrayList<User>> taskCompletionSource = new TaskCompletionSource<>();
         final ArrayList<User> list = new ArrayList<>();
-        DatabaseReference reference = database.getReference();
-        reference.child("Users").
-                addValueEventListener(new ValueEventListener() {
+        final DatabaseReference reference = database.getReference().child("Users");
+        reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot child : dataSnapshot.getChildren()){
@@ -195,6 +194,7 @@ public class SearchAllUsers extends AppCompatActivity
                             }
                         }
                         taskCompletionSource.setResult(list);
+                        reference.removeEventListener(this);
                     }
 
                     @Override

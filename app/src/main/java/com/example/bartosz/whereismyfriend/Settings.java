@@ -128,15 +128,14 @@ public class Settings extends AppCompatActivity
 
     private Task<User> getUserData(String userId) {
         final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
-        _database.getReference("Users").child(userId).
+        final DatabaseReference localReference = _database.getReference("Users").child(userId);
+        localReference.
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        if(HasDataBeenLoaded == false){
-                            HasDataBeenLoaded = true;
-                            taskCompletionSource.setResult(user);
-                        }
+                        taskCompletionSource.setResult(user);
+                        localReference.removeEventListener(this);
                     }
 
                     @Override

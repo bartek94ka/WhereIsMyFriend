@@ -85,12 +85,12 @@ public class UserListAdapter extends BaseAdapter {
             inviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String id = (String) v.getTag();
-                    User user = GetUser(id);
+                    String userId = (String) v.getTag();
+                    User user = GetUser(userId);
                     deleteListItem(user);
                     Toast.makeText(_context, "Invitation has been sended", Toast.LENGTH_SHORT).show();
                     InvitationManager manager = new InvitationManager();
-                    manager.SendInvitation(id);
+                    manager.SendInvitation(userId);
                 }
             });
         }

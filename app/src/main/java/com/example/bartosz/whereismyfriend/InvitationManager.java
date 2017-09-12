@@ -40,6 +40,16 @@ public class InvitationManager {
         _currentUserId = _firebaseAuth.getCurrentUser().getUid();
     }
 
+    public void SendInvitation(User targetUser){
+        _targetUser = targetUser;
+        if(_targetUser.RecivedInvitations == null){
+            _targetUser.RecivedInvitations = new ArrayList<String>();
+        }
+        _targetUser.RecivedInvitations.add(_currentUserId);
+        taskMap.put(_targetUser.Id + "/RecivedInvitations", _targetUser.RecivedInvitations);
+        Thread thread = new ThreadUpdateData();
+        thread.start();
+    }
     public void SendInvitation(final String targetUserId){
         Task task1 = GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
@@ -49,11 +59,10 @@ public class InvitationManager {
                     _myUser.SendInvitations = new ArrayList<String>();
                 }
                 _myUser.SendInvitations.add(targetUserId);
-                taskMap.put(_currentUserId + "/SendInvitations", _myUser.SendInvitations);
+                taskMap.put(_currentUserId, _myUser);
                 if(taskMap.size() == 2){
-                    HasDataBeenLoaded = true;
-                    Thread thread = new ThreadUpdateData();
-                    thread.start();
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                    reference.updateChildren(taskMap);
                 }
             }
         });
@@ -66,11 +75,10 @@ public class InvitationManager {
                     _targetUser.RecivedInvitations = new ArrayList<String>();
                 }
                 _targetUser.RecivedInvitations.add(_currentUserId);
-                taskMap.put(targetUserId + "/RecivedInvitations", _targetUser.RecivedInvitations);
+                taskMap.put(targetUserId, _targetUser);
                 if(taskMap.size() == 2){
-                    HasDataBeenLoaded = true;
-                    Thread thread = new ThreadUpdateData();
-                    thread.start();
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                    reference.updateChildren(taskMap);
                 }
             }
         });
@@ -78,14 +86,13 @@ public class InvitationManager {
 
     private Task<User> GetUserData(String userId) {
         final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
-        _firebaseDatabase.getReference("Users").child(userId).
-                addValueEventListener(new ValueEventListener() {
+        final DatabaseReference localReference = _firebaseDatabase.getReference("Users").child(userId);
+        localReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        if(HasDataBeenLoaded == false){
-                            taskCompletionSource.setResult(user);
-                        }
+                        taskCompletionSource.setResult(user);
+                        localReference.removeEventListener(this);
                     }
 
                     @Override
