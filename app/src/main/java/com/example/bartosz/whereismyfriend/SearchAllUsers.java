@@ -299,7 +299,12 @@ public class SearchAllUsers extends AppCompatActivity
             Intent intent = new Intent(SearchAllUsers.this, SendedInvitationsActivity.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(SearchAllUsers.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            SearchAllUsers.this.finish();
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -22,14 +22,13 @@ import android.widget.ListView;
 
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendedInvitationsActivity extends AppCompatActivity
+public class MyFriendsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth _firebaseAuth;
@@ -39,14 +38,14 @@ public class SendedInvitationsActivity extends AppCompatActivity
     private List<User> userList;
 
     private ListView _listViewUser;
-    private UserListSendedInvitationsAdapter _userListAdapter;
+    private UserListFriendsAdapter _userListAdapter;
     public Handler _handler;
     public View _footerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send_invitations);
+        setContentView(R.layout.activity_my_friends_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,13 +61,13 @@ public class SendedInvitationsActivity extends AppCompatActivity
         _listViewUser = (ListView) findViewById(R.id.listview_users);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         _footerView = inflater.inflate(R.layout.footer_view, null);
-        _handler = new SendedInvitationsActivity.MyHandler();
+        _handler = new MyHandler();
         _firebaseAuth = FirebaseAuth.getInstance();
         _usersCollectionProvider = new UsersCollectionProvider();
         _userManager = new UserManager();
 
         userList = new ArrayList<>();
-        _userListAdapter = new UserListSendedInvitationsAdapter(getApplicationContext(), userList);
+        _userListAdapter = new UserListFriendsAdapter(getApplicationContext(), userList);
         _listViewUser.setAdapter(_userListAdapter);
 
         _userListAdapter.ClearList();
@@ -114,40 +113,40 @@ public class SendedInvitationsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
-            Intent intent = new Intent(SendedInvitationsActivity.this, MyLocation.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, MyLocation.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.home) {
-            Intent intent = new Intent(SendedInvitationsActivity.this, Home.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, Home.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(SendedInvitationsActivity.this, MyFriendLocation.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, MyFriendLocation.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if(id == R.id.search_all_users) {
-            Intent intent = new Intent(SendedInvitationsActivity.this, SearchAllUsers.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, SearchAllUsers.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.settings){
-            Intent intent = new Intent(SendedInvitationsActivity.this, Settings.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, Settings.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.nav_logout){
             _userManager.LogoutUser();
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.nav_recived_invitations){
-            Intent intent = new Intent(SendedInvitationsActivity.this, RecivedInvitationsActivity.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, RecivedInvitationsActivity.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.nav_sended_invitations){
-            Intent intent = new Intent(SendedInvitationsActivity.this, SendedInvitationsActivity.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, SendedInvitationsActivity.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         } else if (id == R.id.nav_myfreindsList){
-            Intent intent = new Intent(SendedInvitationsActivity.this, MyFriendsListActivity.class);
+            Intent intent = new Intent(MyFriendsListActivity.this, MyFriendsListActivity.class);
             startActivity(intent);
-            SendedInvitationsActivity.this.finish();
+            MyFriendsListActivity.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -178,7 +177,7 @@ public class SendedInvitationsActivity extends AppCompatActivity
     public class ThreadGetMoreData extends Thread {
         @Override
         public void run() {
-            _usersCollectionProvider.getUserSendedInvitations().addOnCompleteListener(new OnCompleteListener<ArrayList<User>>() {
+            _usersCollectionProvider.getUserFriends().addOnCompleteListener(new OnCompleteListener<ArrayList<User>>() {
                 @Override
                 public void onComplete(@NonNull Task<ArrayList<User>> task) {
                     _handler.sendEmptyMessage(0);

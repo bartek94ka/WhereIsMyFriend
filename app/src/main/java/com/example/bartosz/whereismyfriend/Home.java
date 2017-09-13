@@ -136,6 +136,10 @@ public class Home extends AppCompatActivity
             Intent intent = new Intent(Home.this, SendedInvitationsActivity.class);
             startActivity(intent);
             Home.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(Home.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            Home.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

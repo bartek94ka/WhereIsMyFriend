@@ -111,6 +111,22 @@ public class InvitationManager {
         });
     }
 
+    public void RemoveFriend(final User userToRemoved){
+        taskMap.clear();
+        GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                _myUser = user;
+                _myUser.FriendsId.remove(userToRemoved.Id);
+                userToRemoved.FriendsId.remove(_currentUserId);
+                taskMap.put(userToRemoved.Id, userToRemoved);
+                taskMap.put(_currentUserId, _myUser);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.updateChildren(taskMap);
+            }
+        });
+    }
+
     public void RejectInvitation(final User userToReject){
         taskMap.clear();
         GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {

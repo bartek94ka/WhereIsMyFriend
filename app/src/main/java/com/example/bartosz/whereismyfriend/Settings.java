@@ -343,6 +343,10 @@ public class Settings extends AppCompatActivity
             Intent intent = new Intent(Settings.this, SendedInvitationsActivity.class);
             startActivity(intent);
             Settings.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(Settings.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            Settings.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

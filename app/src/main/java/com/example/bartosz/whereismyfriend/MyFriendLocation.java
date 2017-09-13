@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,13 +61,13 @@ public class MyFriendLocation extends AppCompatActivity
 
     GoogleMap map;
     LocationManager locationManager;
-    GoogleApiClient googleApiClient;
 
     private GPSTracker gpsTracker;
     private Location mLocation;
     private FirebaseDatabase database;
     private FirebaseAuth _firebaseAuth;
     private FirebaseAuth.AuthStateListener _authStateListener;
+    private UserLocationManager _userLocationManager;
     GeoFire _geoFire;
     double latitude;
     double longitude;
@@ -128,6 +129,8 @@ public class MyFriendLocation extends AppCompatActivity
 
         setCurrentUserLocation(currentUserId);
 
+        _userLocationManager = new UserLocationManager();
+
         _authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -161,11 +164,23 @@ public class MyFriendLocation extends AppCompatActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         currentUser = dataSnapshot.getValue(User.class);
                         LatLng myLocation = new LatLng(latitude, longitude);
-                        Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED));
-                        circle.setVisible(true);
-                        int zoom = getZoomLevel(circle);
+                        CircleOptions circle = new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED);
+                        final int zoom = getZoomLevel(circle);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
-                        fetchUsers();
+                        Intent intent = getIntent();
+                        Bundle extras = intent.getExtras();
+                        if(!extras.isEmpty()){
+                            if(extras.containsKey("userId")){
+                                String userId = extras.getString("userId");
+                                _userLocationManager.getUserMarker(userId).addOnSuccessListener(new OnSuccessListener<MarkerOptions>() {
+                                    @Override
+                                    public void onSuccess(MarkerOptions markerOptions) {
+                                        map.addMarker(markerOptions);
+                                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), zoom - 1));
+                                    }
+                                });
+                            }
+                        }
                     }
 
                     @Override
@@ -265,6 +280,10 @@ public class MyFriendLocation extends AppCompatActivity
             Intent intent = new Intent(MyFriendLocation.this, SendedInvitationsActivity.class);
             startActivity(intent);
             MyFriendLocation.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(MyFriendLocation.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            MyFriendLocation.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -277,7 +296,7 @@ public class MyFriendLocation extends AppCompatActivity
         map = googleMap;
     }
 
-    private int getZoomLevel(Circle circle){
+    private int getZoomLevel(CircleOptions circle){
         int zoomLevel = 1;
         if(circle != null){
             double radius = circle.getRadius();
@@ -285,90 +304,6 @@ public class MyFriendLocation extends AppCompatActivity
             zoomLevel = (int) (16 - Math.log(scale) / Math.log(2));
         }
         return zoomLevel;
-    }
-
-    private void fetchUsers(){
-        GeoQuery geoQuery = _geoFire.queryAtLocation(new GeoLocation(latitude, longitude), currentUser.Range);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-
-                if(key == _firebaseAuth.getCurrentUser().getUid()){
-                    return;
-                }
-                /*boolean isEnteredUserFriend = currentUser.FriendsId.contains(key);
-                if(isEnteredUserFriend == false){
-                    return;
-                }*/
-
-
-                //User user = getUserData(key).getResult();
-
-                Location loc = new Location("to");
-                loc.setLatitude(location.latitude);
-                loc.setLongitude(location.longitude);
-                final LatLng userLocation = new LatLng(location.latitude, location.longitude);
-                /*map.addMarker(new MarkerOptions().position(userLocation).
-                                title(user.FullName).
-                                snippet(user.Email + " " + user.Age)
-                                );*/
-                getUserData(key).addOnCompleteListener(new OnCompleteListener<User>() {
-                    @Override
-                    public void onComplete(@NonNull Task<User> task) {
-                        User user = task.getResult();
-                        if(user != null){
-                            if(user.FullName != null && user.Email != null){
-                                map.addMarker(new MarkerOptions().position(userLocation).
-                                        title(user.FullName).
-                                        snippet("Email: " + user.Email + ", Age: " + user.Age)
-                                );
-                            } else if(user.FullName != null){
-                                map.addMarker(new MarkerOptions().position(userLocation).
-                                        title(user.FullName).
-                                        snippet("Age: " + user.Age)
-                                );
-                            }
-                        }
-                    }
-                });
-                if (!fetchedUserIds) {
-                    userIdsToLocations.put(key, loc);
-                } else {
-                    userIdsToLocations.put(key, loc);
-                }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-                Log.d(LOG_TAG, "onKeyExited: ");
-                /*if (userIdsWithListeners.contains(key)) {
-                    int position = getUserPosition(key);
-                    users.remove(position);
-                    adapter.notifyItemRemoved(position);
-                }*/
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                Log.d(LOG_TAG, "onKeyMoved: ");
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                Log.d(LOG_TAG, "onGeoQueryReady: ");
-                initialListSize = userIdsToLocations.size();
-                if (initialListSize == 0) {
-                    fetchedUserIds = true;
-                }
-                iterationCount = 0;
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-                Log.e(LOG_TAG, "onGeoQueryError: ", error.toException());
-            }
-        });
-        geoQueries.add(geoQuery);
     }
 
     private void setupFirebase() {

@@ -161,6 +161,10 @@ public class RecivedInvitationsActivity extends AppCompatActivity
             Intent intent = new Intent(RecivedInvitationsActivity.this, SendedInvitationsActivity.class);
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(RecivedInvitationsActivity.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            RecivedInvitationsActivity.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

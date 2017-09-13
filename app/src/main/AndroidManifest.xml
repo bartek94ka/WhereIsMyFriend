@@ -75,6 +75,10 @@
         <activity
             android:name=".SendedInvitationsActivity"
             android:label="@string/title_activity_send_invitations"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyFriendsListActivity"
+            android:label="@string/title_activity_my_friends_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
