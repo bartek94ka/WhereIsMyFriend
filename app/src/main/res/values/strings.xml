@@ -26,10 +26,11 @@
     <string name="title_activity_my_location">My Location</string>
     <string name="Home">Home</string>
     <string name="MyLocation">My Location</string>
-    <string name="title_activity_my_friend_location">My Frien dLocation</string>
+    <string name="title_activity_my_friend_location">My Friend Location</string>
     <string name="title_activity_search_all_users">Search All Users</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_recived_invitations">RecivedInvitationsActivity</string>
 </resources>

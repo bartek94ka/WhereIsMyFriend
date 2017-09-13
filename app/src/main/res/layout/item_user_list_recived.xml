@@ -54,33 +54,6 @@
             android:layout_weight="0.5"
             android:gravity="center">
             <Button
-                android:id="@+id/item_invite"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="5dp"
-                android:text="Invite" />
-            <Button
-                android:id="@+id/item_reject"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="5dp"
-                android:text="Reject" />
-            <Button
-                android:id="@+id/item_cancel"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="5dp"
-                android:text="Cancel" />
-            <Button
                 android:id="@+id/item_accept"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
@@ -90,13 +63,13 @@
                 android:layout_marginRight="5dp"
                 android:text="Accept" />
             <Button
-                android:id="@+id/item_details"
+                android:id="@+id/item_reject"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Details"
-                android:layout_alignParentRight="true"/>
-
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="true"
+                android:text="Reject" />
         </RelativeLayout>
     </android.support.v7.widget.LinearLayoutCompat>
 

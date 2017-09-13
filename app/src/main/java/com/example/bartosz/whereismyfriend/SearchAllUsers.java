@@ -291,8 +291,11 @@ public class SearchAllUsers extends AppCompatActivity
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
             SearchAllUsers.this.finish();
+        } else if (id == R.id.nav_recived_invitations){
+            Intent intent = new Intent(SearchAllUsers.this, RecivedInvitationsActivity.class);
+            startActivity(intent);
+            SearchAllUsers.this.finish();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

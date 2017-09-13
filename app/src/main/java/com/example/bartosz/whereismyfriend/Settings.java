@@ -332,8 +332,12 @@ public class Settings extends AppCompatActivity
             Intent intent = new Intent(Settings.this, Settings.class);
             startActivity(intent);
             Settings.this.finish();
-        }else if (id == R.id.nav_logout){
+        } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
+            Settings.this.finish();
+        } else if (id == R.id.nav_recived_invitations){
+            Intent intent = new Intent(Settings.this, RecivedInvitationsActivity.class);
+            startActivity(intent);
             Settings.this.finish();
         }
 

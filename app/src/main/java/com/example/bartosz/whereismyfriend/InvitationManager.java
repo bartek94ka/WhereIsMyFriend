@@ -51,10 +51,10 @@ public class InvitationManager {
         Thread thread = new ThreadUpdateData();
         thread.start();
     }
-    
+
     public void SendInvitation(final String targetUserId){
         taskMap.clear();
-        Task task1 = GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+        GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
                 _myUser = user;
@@ -70,7 +70,7 @@ public class InvitationManager {
             }
         });
 
-         Task task2 = GetUserData(targetUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+         GetUserData(targetUserId).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
                 _targetUser = user;
@@ -87,32 +87,44 @@ public class InvitationManager {
         });
     }
 
-    public void AcceptInvitation(User myUser, User userToAccept){
+    public void AcceptInvitation(final User userToAccept){
         taskMap.clear();
-        if(myUser.FriendsId == null){
-            myUser.FriendsId = new ArrayList<String>();
-        }
-        if(userToAccept.FriendsId == null){
-            userToAccept.FriendsId = new ArrayList<String>();
-        }
-        myUser.FriendsId.add(userToAccept.Id);
-        userToAccept.FriendsId.add(myUser.Id);
-        myUser.RecivedInvitations.remove(userToAccept.Id);
-        userToAccept.SendInvitations.remove(myUser.Id);
-        taskMap.put(userToAccept.Id, userToAccept);
-        taskMap.put(myUser.Id, myUser);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.updateChildren(taskMap);
+        GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                _myUser = user;
+                if(_myUser.FriendsId == null){
+                    _myUser.FriendsId = new ArrayList<String>();
+                }
+                if(userToAccept.FriendsId == null){
+                    userToAccept.FriendsId = new ArrayList<String>();
+                }
+                _myUser.FriendsId.add(userToAccept.Id);
+                userToAccept.FriendsId.add(_currentUserId);
+                _myUser.RecivedInvitations.remove(userToAccept.Id);
+                userToAccept.SendInvitations.remove(_currentUserId);
+                taskMap.put(userToAccept.Id, userToAccept);
+                taskMap.put(_currentUserId, _myUser);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.updateChildren(taskMap);
+            }
+        });
     }
 
-    public void RejectInvitation(User myUser, User userToReject){
+    public void RejectInvitation(final User userToReject){
         taskMap.clear();
-        myUser.RecivedInvitations.remove(userToReject.Id);
-        userToReject.SendInvitations.remove(myUser.Id);
-        taskMap.put(userToReject.Id, userToReject);
-        taskMap.put(myUser.Id, myUser);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.updateChildren(taskMap);
+        GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                _myUser = user;
+                _myUser.RecivedInvitations.remove(userToReject.Id);
+                userToReject.SendInvitations.remove(_currentUserId);
+                taskMap.put(userToReject.Id, userToReject);
+                taskMap.put(_currentUserId, _myUser);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.updateChildren(taskMap);
+            }
+        });
     }
 
     private Task<User> GetUserData(String userId) {
