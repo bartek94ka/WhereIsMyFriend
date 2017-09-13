@@ -9,22 +9,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
-import com.example.bartosz.whereismyfriend.R;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 /**
- * Created by Bartosz on 05.09.2017.
+ * Created by Bartosz on 13.09.2017.
  */
 
-public class UserListAdapter extends BaseAdapter {
+public class UserListSendedInvitationsAdapter extends BaseAdapter {
     private Context _context;
     private List<User> _users;
 
-    public UserListAdapter(Context context, List<User> users){
+    public UserListSendedInvitationsAdapter(Context context, List<User> users){
         _users = users;
         _context = context;
     }
@@ -75,40 +71,25 @@ public class UserListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View v = View.inflate(_context, R.layout.item_user_list, null);
+        View v = View.inflate(_context, R.layout.item_user_list_sended, null);
         TextView itemName = (TextView)v.findViewById(R.id.item_name);
         TextView itemSurname = (TextView)v.findViewById(R.id.item_surname);
         TextView itemAge = (TextView)v.findViewById(R.id.item_age);
         final InvitationManager manager = new InvitationManager();
-        Button inviteButton = (Button)v.findViewById(R.id.item_invite);
-        if(inviteButton != null){
-            inviteButton.setTag(_users.get(position).Id);
-            inviteButton.setOnClickListener(new View.OnClickListener() {
+        Button cancelButton = (Button)v.findViewById(R.id.item_cancel);
+        if(cancelButton != null){
+            cancelButton.setTag(_users.get(position).Id);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userId = (String) v.getTag();
                     User user = GetUser(userId);
                     deleteListItem(user);
-                    Toast.makeText(_context, "Invitation has been sended", Toast.LENGTH_SHORT).show();
-                    manager.SendInvitation(userId);
+                    Toast.makeText(_context, "Invitation has been cancled", Toast.LENGTH_SHORT).show();
+                    manager.CancleInvitation(user);
                 }
             });
         }
-        Button acceptButton = (Button)v.findViewById(R.id.item_accept);
-        if(acceptButton != null){
-            acceptButton.setTag(_users.get(position).Id);
-            acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String userId = (String) v.getTag();
-                    User user = GetUser(userId);
-                    deleteListItem(user);
-                    Toast.makeText(_context, "Invitation has been accepted", Toast.LENGTH_SHORT).show();
-                    manager.AcceptInvitation(user);
-                }
-            });
-        }
-
         //Set text for TextView
         itemName.setText(_users.get(position).Name);
         itemSurname.setText(String.valueOf(_users.get(position).Surname));

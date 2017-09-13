@@ -261,6 +261,10 @@ public class MyFriendLocation extends AppCompatActivity
             Intent intent = new Intent(MyFriendLocation.this, RecivedInvitationsActivity.class);
             startActivity(intent);
             MyFriendLocation.this.finish();
+        } else if (id == R.id.nav_sended_invitations){
+            Intent intent = new Intent(MyFriendLocation.this, SendedInvitationsActivity.class);
+            startActivity(intent);
+            MyFriendLocation.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

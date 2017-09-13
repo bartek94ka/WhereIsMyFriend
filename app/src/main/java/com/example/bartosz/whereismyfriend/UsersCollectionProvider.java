@@ -28,8 +28,7 @@ public class UsersCollectionProvider {
         _currentUserId = _firebaseAuth.getCurrentUser().getUid();
     }
 
-    public Task<ArrayList<User>> getUserRecivedInvitations()
-    {
+    public Task<ArrayList<User>> getUserRecivedInvitations() {
         UserManager userManager = new UserManager();
         final TaskCompletionSource<ArrayList<User>> taskCompletionSource = new TaskCompletionSource<>();
         final ArrayList<User> list = new ArrayList<>();
@@ -60,6 +59,104 @@ public class UsersCollectionProvider {
                             }
                             if(isMyUser == false && isInvitationSend == false &&
                                     isInvitationRecived == true && isFriend == false){
+                                user.Id = child.getKey();
+                                list.add(user);
+                            }
+                        }
+                        taskCompletionSource.setResult(list);
+                        reference.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
+    public Task<ArrayList<User>> getUserSendedInvitations() {
+        UserManager userManager = new UserManager();
+        final TaskCompletionSource<ArrayList<User>> taskCompletionSource = new TaskCompletionSource<>();
+        final ArrayList<User> list = new ArrayList<>();
+        final DatabaseReference reference = _firebaseDatabase.getReference().child("Users");
+        userManager.getUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                final User _currentUser = user;
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()){
+                            User user = child.getValue(User.class);
+                            boolean isMyUser = child.getKey().equals(_firebaseAuth.getCurrentUser().getUid());
+                            boolean isInvitationSend = false;
+                            boolean isInvitationRecived = false;
+                            boolean isFriend = false;
+                            if(_currentUser != null){
+                                if(_currentUser.SendInvitations != null){
+                                    isInvitationSend = _currentUser.SendInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.RecivedInvitations != null){
+                                    isInvitationRecived = _currentUser.RecivedInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.FriendsId != null){
+                                    isFriend = _currentUser.FriendsId.contains(child.getKey());
+                                }
+                            }
+                            if(isMyUser == false && isInvitationSend == true &&
+                                    isInvitationRecived == false && isFriend == false){
+                                user.Id = child.getKey();
+                                list.add(user);
+                            }
+                        }
+                        taskCompletionSource.setResult(list);
+                        reference.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+        return taskCompletionSource.getTask();
+    }
+
+    public Task<ArrayList<User>> getUserFriends() {
+        UserManager userManager = new UserManager();
+        final TaskCompletionSource<ArrayList<User>> taskCompletionSource = new TaskCompletionSource<>();
+        final ArrayList<User> list = new ArrayList<>();
+        final DatabaseReference reference = _firebaseDatabase.getReference().child("Users");
+        userManager.getUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                final User _currentUser = user;
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()){
+                            User user = child.getValue(User.class);
+                            boolean isMyUser = child.getKey().equals(_firebaseAuth.getCurrentUser().getUid());
+                            boolean isInvitationSend = false;
+                            boolean isInvitationRecived = false;
+                            boolean isFriend = false;
+                            if(_currentUser != null){
+                                if(_currentUser.SendInvitations != null){
+                                    isInvitationSend = _currentUser.SendInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.RecivedInvitations != null){
+                                    isInvitationRecived = _currentUser.RecivedInvitations.contains(child.getKey());
+                                }
+                                if(_currentUser.FriendsId != null){
+                                    isFriend = _currentUser.FriendsId.contains(child.getKey());
+                                }
+                            }
+                            if(isMyUser == false && isInvitationSend == false &&
+                                    isInvitationRecived == false && isFriend == true){
                                 user.Id = child.getKey();
                                 list.add(user);
                             }

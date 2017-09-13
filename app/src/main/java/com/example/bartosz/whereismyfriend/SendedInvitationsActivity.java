@@ -18,9 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,24 +29,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecivedInvitationsActivity extends AppCompatActivity
+public class SendedInvitationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth _firebaseAuth;
 
     private UserManager _userManager;
     private UsersCollectionProvider _usersCollectionProvider;
-    private User _currentUser;
     private List<User> userList;
 
     private ListView _listViewUser;
-    private UserListRecivedInvitationsAdapter _userListAdapter;
+    private UserListSendedInvitationsAdapter _userListAdapter;
     public Handler _handler;
     public View _footerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recived_invitations);
+        setContentView(R.layout.activity_send_invitations);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,32 +59,17 @@ public class RecivedInvitationsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         _listViewUser = (ListView) findViewById(R.id.listview_users);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         _footerView = inflater.inflate(R.layout.footer_view, null);
-        _handler = new MyHandler();
+        _handler = new SendedInvitationsActivity.MyHandler();
         _firebaseAuth = FirebaseAuth.getInstance();
         _usersCollectionProvider = new UsersCollectionProvider();
         _userManager = new UserManager();
-        _userManager.getUserData(_firebaseAuth.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                _currentUser = user;
-            }
-        });
 
         userList = new ArrayList<>();
-        _userListAdapter = new UserListRecivedInvitationsAdapter(getApplicationContext(), userList);
+        _userListAdapter = new UserListSendedInvitationsAdapter(getApplicationContext(), userList);
         _listViewUser.setAdapter(_userListAdapter);
-        _listViewUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Do something
-                //Ex: display msg with product id get from view.getTag
-                Toast.makeText(getApplicationContext(), "Clicked product id =" + view.getTag(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         _userListAdapter.ClearList();
         Thread thread = new ThreadGetMoreData();
@@ -131,36 +114,36 @@ public class RecivedInvitationsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
-            Intent intent = new Intent(RecivedInvitationsActivity.this, MyLocation.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, MyLocation.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if (id == R.id.home) {
-            Intent intent = new Intent(RecivedInvitationsActivity.this, Home.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, Home.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(RecivedInvitationsActivity.this, MyFriendLocation.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, MyFriendLocation.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if(id == R.id.search_all_users) {
-            Intent intent = new Intent(RecivedInvitationsActivity.this, SearchAllUsers.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, SearchAllUsers.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if (id == R.id.settings){
-            Intent intent = new Intent(RecivedInvitationsActivity.this, Settings.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, Settings.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if (id == R.id.nav_logout){
             _userManager.LogoutUser();
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if (id == R.id.nav_recived_invitations){
-            Intent intent = new Intent(RecivedInvitationsActivity.this, RecivedInvitationsActivity.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, RecivedInvitationsActivity.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         } else if (id == R.id.nav_sended_invitations){
-            Intent intent = new Intent(RecivedInvitationsActivity.this, SendedInvitationsActivity.class);
+            Intent intent = new Intent(SendedInvitationsActivity.this, SendedInvitationsActivity.class);
             startActivity(intent);
-            RecivedInvitationsActivity.this.finish();
+            SendedInvitationsActivity.this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,7 +174,7 @@ public class RecivedInvitationsActivity extends AppCompatActivity
     public class ThreadGetMoreData extends Thread {
         @Override
         public void run() {
-            _usersCollectionProvider.getUserRecivedInvitations().addOnCompleteListener(new OnCompleteListener<ArrayList<User>>() {
+            _usersCollectionProvider.getUserSendedInvitations().addOnCompleteListener(new OnCompleteListener<ArrayList<User>>() {
                 @Override
                 public void onComplete(@NonNull Task<ArrayList<User>> task) {
                     _handler.sendEmptyMessage(0);

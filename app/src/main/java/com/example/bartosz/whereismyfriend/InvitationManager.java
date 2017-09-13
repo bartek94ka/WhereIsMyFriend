@@ -127,6 +127,22 @@ public class InvitationManager {
         });
     }
 
+    public void CancleInvitation(final User userToCancel){
+        taskMap.clear();
+        GetUserData(_currentUserId).addOnSuccessListener(new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                _myUser = user;
+                _myUser.SendInvitations.remove(userToCancel.Id);
+                userToCancel.RecivedInvitations.remove(_currentUserId);
+                taskMap.put(userToCancel.Id, userToCancel);
+                taskMap.put(_currentUserId, _myUser);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.updateChildren(taskMap);
+            }
+        });
+    }
+
     private Task<User> GetUserData(String userId) {
         final TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
         final DatabaseReference localReference = _firebaseDatabase.getReference("Users").child(userId);

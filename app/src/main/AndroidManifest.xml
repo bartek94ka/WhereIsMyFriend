@@ -45,7 +45,7 @@
         <activity
             android:name=".Home"
             android:label="@string/Home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyLocation"
             android:label="@string/title_activity_my_location"
@@ -67,10 +67,14 @@
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RecivedInvitationsActivity"
             android:label="@string/title_activity_recived_invitations"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SendedInvitationsActivity"
+            android:label="@string/title_activity_send_invitations"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
