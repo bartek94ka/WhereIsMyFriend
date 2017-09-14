@@ -60,39 +60,13 @@ public class CompleteRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(RegisterUser() == true){
-                    Intent registerIntent = new Intent(CompleteRegisterActivity.this, MyLocation.class);
+                    Intent registerIntent = new Intent(CompleteRegisterActivity.this, Home.class);
                     CompleteRegisterActivity.this.startActivity(registerIntent);
                     CompleteRegisterActivity.this.finish();
                 }
             }
         });
-
-        /*_authStateListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(_firebaseAuth.getCurrentUser() != null){
-                    Intent registerIntent = new Intent(CompleteRegisterActivity.this, WhereIAmActivity.class);
-                    CompleteRegisterActivity.this.startActivity(registerIntent);
-                }
-            }
-        };*/
     }
-/*
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        _firebaseAuth.addAuthStateListener(_authStateListener);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        _firebaseAuth.removeAuthStateListener(_authStateListener);
-    }
-*/
-
-
 
     private Boolean RegisterUser(){
 
