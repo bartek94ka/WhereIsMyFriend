@@ -1,6 +1,7 @@
 package com.example.bartosz.whereismyfriend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -94,17 +95,18 @@ public class UserListAdapter extends BaseAdapter {
                 }
             });
         }
-        Button acceptButton = (Button)v.findViewById(R.id.item_accept);
-        if(acceptButton != null){
-            acceptButton.setTag(_users.get(position).Id);
-            acceptButton.setOnClickListener(new View.OnClickListener() {
+        Button detailsButton = (Button)v.findViewById(R.id.item_details);
+        if(detailsButton != null){
+            detailsButton.setTag(_users.get(position).Id);
+            detailsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userId = (String) v.getTag();
                     User user = GetUser(userId);
-                    deleteListItem(user);
-                    Toast.makeText(_context, "Invitation has been accepted", Toast.LENGTH_SHORT).show();
-                    manager.AcceptInvitation(user);
+                    Intent intent = new Intent(_context, UserDetailsActivity.class);
+                    intent.putExtra("userId",userId);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    _context.startActivity(intent);
                 }
             });
         }

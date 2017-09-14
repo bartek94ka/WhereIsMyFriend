@@ -130,16 +130,6 @@ public class MyFriendLocation extends AppCompatActivity
         setCurrentUserLocation(currentUserId);
 
         _userLocationManager = new UserLocationManager();
-
-        _authStateListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(_firebaseAuth.getCurrentUser() == null){
-                    Intent loginIntent = new Intent(MyFriendLocation.this, LoginActivity.class);
-                    startActivity(loginIntent);
-                }
-            }
-        };
     }
 
     private void setCurrentUserLocation(String currentUserId) {
@@ -246,7 +236,6 @@ public class MyFriendLocation extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
@@ -310,13 +299,4 @@ public class MyFriendLocation extends AppCompatActivity
         DatabaseReference ref = database.getReference("geofire");
         _geoFire = new GeoFire(ref);
     }
-
-    /*private int getUserPosition(String id) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).id.equals(id)) {
-                return i;
-            }
-        }
-        return -1;
-    }*/
 }

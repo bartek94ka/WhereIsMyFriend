@@ -128,7 +128,7 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     }
     private User CreateUserObject(String email, String name, String surname, String age)
     {
-        User newCreatedUser = new User(name, surname, 1000.0, Integer.valueOf(age));
+        User newCreatedUser = new User(email, name, surname, 1000.0, Integer.valueOf(age));
         return newCreatedUser;
     }
 }

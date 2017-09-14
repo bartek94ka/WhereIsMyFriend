@@ -35,4 +35,5 @@
     <string name="title_activity_recived_invitations">RecivedInvitationsActivity</string>
     <string name="title_activity_send_invitations">SendInvitationsActivity</string>
     <string name="title_activity_my_friends_list">MyFriendsListActivity</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
 </resources>

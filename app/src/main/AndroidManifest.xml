@@ -62,8 +62,7 @@
         <activity
             android:name=".SearchAllUsers"
             android:label="@string/title_activity_search_all_users"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
@@ -79,7 +78,12 @@
         <activity
             android:name=".MyFriendsListActivity"
             android:label="@string/title_activity_my_friends_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserDetailsActivity"
+            android:label="@string/title_activity_user_details"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
