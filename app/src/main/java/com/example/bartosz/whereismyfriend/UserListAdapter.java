@@ -114,7 +114,8 @@ public class UserListAdapter extends BaseAdapter {
         //Set text for TextView
         itemName.setText(_users.get(position).Name);
         itemSurname.setText(String.valueOf(_users.get(position).Surname));
-        //itemAge.setText(String.valueOf(_users.get(position).Age));
+        String age = String.valueOf(_users.get(position).Age);
+        itemAge.setText(age);
 
         //Save product id to tag
         v.setTag(_users.get(position));

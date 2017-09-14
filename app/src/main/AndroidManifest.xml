@@ -34,6 +34,7 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -62,7 +63,7 @@
         <activity
             android:name=".SearchAllUsers"
             android:label="@string/title_activity_search_all_users"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
@@ -82,8 +83,11 @@
         <activity
             android:name=".UserDetailsActivity"
             android:label="@string/title_activity_user_details"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".FriendsInNearbyActivity"
+            android:label="@string/title_activity_friends_in_nearby"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

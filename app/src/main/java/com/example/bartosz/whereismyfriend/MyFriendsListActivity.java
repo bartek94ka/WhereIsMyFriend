@@ -120,8 +120,8 @@ public class MyFriendsListActivity extends AppCompatActivity
             Intent intent = new Intent(MyFriendsListActivity.this, Home.class);
             startActivity(intent);
             MyFriendsListActivity.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(MyFriendsListActivity.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(MyFriendsListActivity.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             MyFriendsListActivity.this.finish();
         } else if(id == R.id.search_all_users) {

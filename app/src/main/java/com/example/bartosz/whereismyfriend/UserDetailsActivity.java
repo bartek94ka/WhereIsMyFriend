@@ -135,6 +135,10 @@ public class UserDetailsActivity extends AppCompatActivity
             Intent intent = new Intent(UserDetailsActivity.this, Home.class);
             startActivity(intent);
             UserDetailsActivity.this.finish();
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(UserDetailsActivity.this, FriendsInNearbyActivity.class);
+            startActivity(intent);
+            UserDetailsActivity.this.finish();
         } else if (id == R.id.nav_logout){
             _firebaseAuth.signOut();
             UserDetailsActivity.this.finish();

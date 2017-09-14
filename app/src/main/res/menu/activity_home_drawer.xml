@@ -17,9 +17,9 @@
         <item android:id="@+id/search_all_users"
             android:icon="@mipmap/ic_settings_power_black_24dp"
             android:title="Search Users"/>
-        <item android:id="@+id/nav_myfriendlocation"
+        <item android:id="@+id/nav_friendsInNearby"
             android:icon="@mipmap/ic_settings_power_black_24dp"
-            android:title="Find Friend Location"/>
+            android:title="Friends In Nearby"/>
         <item android:id="@+id/settings"
             android:icon="@mipmap/ic_settings_power_black_24dp"
             android:title="Settings"/>

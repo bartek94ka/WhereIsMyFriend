@@ -276,8 +276,8 @@ public class SearchAllUsers extends AppCompatActivity
             Intent intent = new Intent(SearchAllUsers.this, Home.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(SearchAllUsers.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(SearchAllUsers.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
         } else if(id == R.id.search_all_users) {

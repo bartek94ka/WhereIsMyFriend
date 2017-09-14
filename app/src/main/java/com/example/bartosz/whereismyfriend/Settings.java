@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
@@ -60,6 +61,7 @@ public class Settings extends AppCompatActivity
     private EditText _settingsName;
     private EditText _settingsSurname;
     private EditText _settingsAge;
+    private TextView _settingsRange;
     private SeekBar _settingsSetRange;
     private Button _settingsSaveButton;
 
@@ -87,9 +89,30 @@ public class Settings extends AppCompatActivity
 
 
         InitializeLocalVeribles();
+
         SetChangePasswordButtonAction();
         FillBasicUserData();
         SetBasicUserDataButtonAction();
+        SetSeekBarChangingValueText();
+    }
+
+    private void SetSeekBarChangingValueText(){
+        _settingsSetRange.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                _settingsRange.setText("Range: " + _settingsSetRange.getProgress() + " m");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                _settingsRange.setText("Range: " + _settingsSetRange.getProgress() + " m");
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                _settingsRange.setText("Range: " + _settingsSetRange.getProgress() + " m");
+            }
+        });
     }
 
     private void InitializeLocalVeribles(){
@@ -100,6 +123,7 @@ public class Settings extends AppCompatActivity
         _settingsName = (EditText) findViewById(R.id.settingsName);
         _settingsSurname = (EditText) findViewById(R.id.settingsSurname);
         _settingsAge = (EditText) findViewById(R.id.settingsAge);
+        _settingsRange = (TextView) findViewById(R.id.settingsRange) ;
         _settingsSetRange = (SeekBar) findViewById(R.id.settingsSetRange);
         _settingsSaveButton = (Button) findViewById(R.id.settingsSaveButton);
 
@@ -156,7 +180,12 @@ public class Settings extends AppCompatActivity
             Map<String,Object> taskMap = new HashMap<String,Object>();
             taskMap.put(_currentUser.getUid(), _user);
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.updateChildren(taskMap);
+            reference.updateChildren(taskMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Toast.makeText(Settings.this, "Data changed successfully", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -320,8 +349,8 @@ public class Settings extends AppCompatActivity
             Intent intent = new Intent(Settings.this, Home.class);
             startActivity(intent);
             Settings.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(Settings.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(Settings.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             Settings.this.finish();
         } else if(id == R.id.search_all_users) {

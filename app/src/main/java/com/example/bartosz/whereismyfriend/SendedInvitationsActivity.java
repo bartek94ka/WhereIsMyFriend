@@ -121,8 +121,8 @@ public class SendedInvitationsActivity extends AppCompatActivity
             Intent intent = new Intent(SendedInvitationsActivity.this, Home.class);
             startActivity(intent);
             SendedInvitationsActivity.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(SendedInvitationsActivity.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(SendedInvitationsActivity.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             SendedInvitationsActivity.this.finish();
         } else if(id == R.id.search_all_users) {

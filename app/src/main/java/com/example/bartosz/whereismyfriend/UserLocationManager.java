@@ -75,4 +75,19 @@ public class UserLocationManager {
         });
         return taskCompletionSource.getTask();
     }
+
+    public void setCurrentUserLocation(String currentUserId, double latitude, double longitude) {
+        _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude),
+                new GeoFire.CompletionListener() {
+
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            System.err.println("There was an error saving the location to GeoFire: " + error);
+                        } else {
+                            System.out.println("Location saved on server successfully!");
+                        }
+                    }
+                });
+    }
 }

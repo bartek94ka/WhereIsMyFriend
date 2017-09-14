@@ -260,8 +260,8 @@ public class MyLocation extends AppCompatActivity
             Intent intent = new Intent(MyLocation.this, Home.class);
             startActivity(intent);
             MyLocation.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(MyLocation.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(MyLocation.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             MyLocation.this.finish();
         } else if (id == R.id.nav_logout){

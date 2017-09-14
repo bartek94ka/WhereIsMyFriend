@@ -52,6 +52,14 @@
             android:inputType="number"
             android:hint="Age"/>
 
+        <TextView
+            android:id="@+id/settingsRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="10dp"
+            android:text="Range: 100 m"
+            android:textSize="18sp" />
         <SeekBar
             android:id="@+id/settingsSetRange"
             android:layout_marginTop="10dp"

@@ -8,28 +8,23 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <LinearLayout
-        android:id="@+id/sendeddUserInvitations"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <include
+        layout="@layout/app_bar_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <include
-            layout="@layout/app_bar_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <ListView
-            android:id="@+id/listview_users"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content_frame">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:divider="@android:color/holo_blue_dark"
-            android:dividerHeight="5dp"></ListView>
-    </LinearLayout>
+            android:layout_marginTop="@dimen/topMapMargin"
+            tools:layout_height="match_parent" />
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -39,5 +34,4 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_home_drawer" />
-
 </android.support.v4.widget.DrawerLayout>

@@ -138,8 +138,8 @@ public class RecivedInvitationsActivity extends AppCompatActivity
             Intent intent = new Intent(RecivedInvitationsActivity.this, Home.class);
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
-        } else if(id == R.id.nav_myfriendlocation){
-            Intent intent = new Intent(RecivedInvitationsActivity.this, MyFriendLocation.class);
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(RecivedInvitationsActivity.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
         } else if(id == R.id.search_all_users) {
