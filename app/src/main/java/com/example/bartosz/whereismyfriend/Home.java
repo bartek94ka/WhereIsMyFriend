@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity
@@ -44,27 +45,7 @@ public class Home extends AppCompatActivity
 
         _firebaseAuth = FirebaseAuth.getInstance();
 
-        _authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(_firebaseAuth.getCurrentUser() == null){
-                    Intent loginIntent = new Intent(Home.this, LoginActivity.class);
-                    startActivity(loginIntent);
-                }
-            }
-        };
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        _firebaseAuth.addAuthStateListener(_authStateListener);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        _firebaseAuth.removeAuthStateListener(_authStateListener);
+        startService(new Intent(this, UpdateUserLocationService.class));
     }
 
     @Override

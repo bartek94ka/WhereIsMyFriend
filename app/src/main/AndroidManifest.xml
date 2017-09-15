@@ -88,6 +88,7 @@
             android:name=".FriendsInNearbyActivity"
             android:label="@string/title_activity_friends_in_nearby"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service android:name=".Services.UpdateUserLocationService"/>
     </application>
 
 </manifest>

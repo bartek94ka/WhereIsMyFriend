@@ -126,9 +126,6 @@ public class MyLocation extends AppCompatActivity
         _geoFire = new GeoFire(ref);
 
         setupFirebase();
-
-        //fetchUsers();
-
         setCurrentUserLocation(currentUserId);
 
         _authStateListener = new FirebaseAuth.AuthStateListener(){

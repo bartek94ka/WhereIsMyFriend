@@ -12,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -39,9 +42,14 @@ public class UserManager {
 
     private FirebaseDatabase _database;
     private FirebaseAuth _firebaseAuth;
+    private DatabaseReference _geofireReference;
+    private GeoFire _geoFire;
+
     public UserManager(){
         _database = FirebaseDatabase.getInstance();
         _firebaseAuth = FirebaseAuth.getInstance();
+        _geofireReference = _database.getReference("geofire");
+        _geoFire = new GeoFire(_geofireReference);
     }
 
     public Task<User> getUserData(String userId) {
@@ -238,4 +246,20 @@ public class UserManager {
             _firebaseAuth.signOut();
         }
     }
+
+    public void UpdateCurrentUserLocation(Context context){
+        String currentUserId = _firebaseAuth.getCurrentUser().getUid();
+        GPSTracker gpsTracker = new GPSTracker(context);
+        Location mLocation = gpsTracker.getLocation();
+        double latitude;
+        double longitude;
+        if(mLocation != null)
+        {
+            latitude = mLocation.getLatitude();
+            longitude = mLocation.getLongitude();
+            _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude));
+        }
+    }
+
+
 }
