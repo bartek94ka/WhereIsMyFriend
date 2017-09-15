@@ -27,7 +27,6 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     private FirebaseDatabase _database;
     private FirebaseAuth _firebaseAuth;
     private DatabaseReference _databaseRef;
-    private FirebaseAuth.AuthStateListener _authStateListener;
     private ProgressDialog _progressBar;
     private GPSTracker gpsTracker;
     private Location mLocation;
@@ -37,8 +36,6 @@ public class CompleteRegisterActivity extends AppCompatActivity {
     private EditText etAge;
 
     private Button buttonRegister;
-    private TextView tvLoginLink;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -53,6 +53,7 @@
             android:orientation="horizontal"
             android:layout_weight="0.5"
             android:gravity="center">
+
             <Button
                 android:id="@+id/item_invite"
                 style="@style/Widget.AppCompat.Button.Colored"
