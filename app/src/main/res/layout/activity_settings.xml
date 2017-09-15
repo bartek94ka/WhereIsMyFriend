@@ -71,6 +71,7 @@
 
         <Button
             android:id="@+id/settingsSaveButton"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,6 +116,7 @@
 
         <Button
             android:id="@+id/settingsChangePasswordButton"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

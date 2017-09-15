@@ -12,6 +12,7 @@
         android:id="@+id/searchUsers"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
         android:orientation="vertical">
 
         <include
@@ -21,25 +22,26 @@
 
         <EditText
             android:id="@+id/searchFullName"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Name and Surname"/>
+            android:hint="Name and Surname"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/searchButton"
-            android:layout_centerInParent="true"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Search" />
 
         <ListView
             android:id="@+id/listview_users"

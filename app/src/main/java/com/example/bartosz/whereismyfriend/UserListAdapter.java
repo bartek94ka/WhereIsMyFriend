@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +82,7 @@ public class UserListAdapter extends BaseAdapter {
         TextView itemSurname = (TextView)v.findViewById(R.id.item_surname);
         TextView itemAge = (TextView)v.findViewById(R.id.item_age);
         final InvitationManager manager = new InvitationManager();
-        Button inviteButton = (Button)v.findViewById(R.id.item_invite);
+        ImageButton inviteButton = (ImageButton)v.findViewById(R.id.item_invite);
         if(inviteButton != null){
             inviteButton.setTag(_users.get(position).Id);
             inviteButton.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +96,7 @@ public class UserListAdapter extends BaseAdapter {
                 }
             });
         }
-        Button detailsButton = (Button)v.findViewById(R.id.item_details);
+        ImageButton detailsButton = (ImageButton)v.findViewById(R.id.item_details);
         if(detailsButton != null){
             detailsButton.setTag(_users.get(position).Id);
             detailsButton.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +116,7 @@ public class UserListAdapter extends BaseAdapter {
         itemName.setText(_users.get(position).Name);
         itemSurname.setText(String.valueOf(_users.get(position).Surname));
         String age = String.valueOf(_users.get(position).Age);
-        itemAge.setText(age);
+        itemAge.setText("Age: " + age);
 
         //Save product id to tag
         v.setTag(_users.get(position));

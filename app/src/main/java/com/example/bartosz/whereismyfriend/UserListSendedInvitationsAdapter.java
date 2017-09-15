@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,7 +77,7 @@ public class UserListSendedInvitationsAdapter extends BaseAdapter {
         TextView itemSurname = (TextView)v.findViewById(R.id.item_surname);
         TextView itemAge = (TextView)v.findViewById(R.id.item_age);
         final InvitationManager manager = new InvitationManager();
-        Button cancelButton = (Button)v.findViewById(R.id.item_cancel);
+        ImageButton cancelButton = (ImageButton)v.findViewById(R.id.item_cancel);
         if(cancelButton != null){
             cancelButton.setTag(_users.get(position).Id);
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +95,7 @@ public class UserListSendedInvitationsAdapter extends BaseAdapter {
         itemName.setText(_users.get(position).Name);
         itemSurname.setText(String.valueOf(_users.get(position).Surname));
         String age = String.valueOf(_users.get(position).Age);
-        itemAge.setText("Age" + age);
+        itemAge.setText("Age: " + age);
 
         //Save product id to tag
         v.setTag(_users.get(position));

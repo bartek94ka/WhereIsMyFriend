@@ -51,25 +51,31 @@
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:orientation="horizontal"
-            android:layout_weight="0.5"
+            android:layout_weight="0.3"
             android:gravity="center">
-            <Button
+
+            <ImageButton
                 android:id="@+id/item_accept"
-                style="@style/Widget.AppCompat.Button.Colored"
+                android:minWidth="120px"
+                android:minHeight="120px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="5dp"
-                android:text="Accept" />
-            <Button
+                android:background="@color/cardview_light_background"
+                android:src="@mipmap/ic_person_add_black_24dp" />
+
+            <ImageButton
                 android:id="@+id/item_reject"
-                style="@style/Widget.AppCompat.Button.Colored"
+                android:minWidth="120px"
+                android:minHeight="120px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
+                android:text="Details"
                 android:layout_alignParentRight="true"
-                android:text="Reject" />
+                android:background="@color/cardview_light_background"
+                android:src="@mipmap/ic_remove_circle_black_24dp" />
         </RelativeLayout>
     </android.support.v7.widget.LinearLayoutCompat>
 
