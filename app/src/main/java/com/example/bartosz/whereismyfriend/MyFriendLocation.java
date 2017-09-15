@@ -66,14 +66,12 @@ public class MyFriendLocation extends AppCompatActivity
     private Location mLocation;
     private FirebaseDatabase database;
     private FirebaseAuth _firebaseAuth;
-    private FirebaseAuth.AuthStateListener _authStateListener;
     private UserLocationManager _userLocationManager;
     GeoFire _geoFire;
     double latitude;
     double longitude;
     private User currentUser;
     private MapFragment mapFragment;
-    private boolean HasDataBeenLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +116,7 @@ public class MyFriendLocation extends AppCompatActivity
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        map.clear();
                         currentUser = dataSnapshot.getValue(User.class);
                         LatLng myLocation = new LatLng(latitude, longitude);
                         CircleOptions circle = new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED);
@@ -138,7 +137,6 @@ public class MyFriendLocation extends AppCompatActivity
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 

@@ -19,10 +19,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.List;
 public class MyFriendsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private TextView _informText;
     private FirebaseAuth _firebaseAuth;
 
     private UserManager _userManager;
@@ -57,6 +60,7 @@ public class MyFriendsListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        _informText = (TextView) findViewById(R.id.myFriendsList_empty);
 
         _listViewUser = (ListView) findViewById(R.id.listview_users);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -165,6 +169,10 @@ public class MyFriendsListActivity extends AppCompatActivity
                 case 1:
                     //Update data adapter and UI
                     _userListAdapter.addListItemToAdapter((ArrayList<User>)msg.obj);
+                    int count = ((ArrayList<User>) msg.obj).size();
+                    if(count == 0){
+                        _informText.setVisibility(View.VISIBLE);
+                    }
                     //Remove loading view after update listview
                     _listViewUser.removeFooterView(_footerView);
                     break;
@@ -183,11 +191,6 @@ public class MyFriendsListActivity extends AppCompatActivity
                     _handler.sendEmptyMessage(0);
                     ArrayList<User> lstResult = task.getResult();
                     Message msg = _handler.obtainMessage(1, lstResult);
-                    /*try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
                     _handler.sendMessage(msg);
                 }
             });

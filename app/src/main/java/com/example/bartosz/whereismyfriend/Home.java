@@ -99,7 +99,10 @@ public class Home extends AppCompatActivity
             startActivity(intent);
             Home.this.finish();
         } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(Home.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
             _firebaseAuth.signOut();
+            startActivity(intent);
             Home.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(Home.this, Settings.class);

@@ -248,18 +248,23 @@ public class UserManager {
     }
 
     public void UpdateCurrentUserLocation(Context context){
-        String currentUserId = _firebaseAuth.getCurrentUser().getUid();
-        GPSTracker gpsTracker = new GPSTracker(context);
-        Location mLocation = gpsTracker.getLocation();
-        double latitude;
-        double longitude;
-        if(mLocation != null)
-        {
-            latitude = mLocation.getLatitude();
-            longitude = mLocation.getLongitude();
-            _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude));
+        try{
+            if(_firebaseAuth == null && _firebaseAuth.getCurrentUser() == null){
+                return;
+            }
+            String currentUserId = _firebaseAuth.getCurrentUser().getUid();
+            GPSTracker gpsTracker = new GPSTracker(context);
+            Location mLocation = gpsTracker.getLocation();
+            double latitude;
+            double longitude;
+            if(mLocation != null)
+            {
+                latitude = mLocation.getLatitude();
+                longitude = mLocation.getLongitude();
+                _geoFire.setLocation(currentUserId, new GeoLocation(latitude, longitude));
+            }
+        }catch(Exception ex){
+
         }
     }
-
-
 }

@@ -51,7 +51,7 @@ public class UpdateUserLocationService extends Service {
     }
 
     //class TimeDisplay for handling task
-    class TimeDisplay extends TimerTask {
+    public class TimeDisplay extends TimerTask {
         @Override
         public void run() {
             // run on another thread

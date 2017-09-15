@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.bartosz.whereismyfriend.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +33,7 @@ import java.util.List;
 public class SendedInvitationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private TextView _informText;
     private FirebaseAuth _firebaseAuth;
 
     private UserManager _userManager;
@@ -58,6 +60,8 @@ public class SendedInvitationsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        _informText = (TextView) findViewById(R.id.sendeddUserInvitationsList_empty);
 
         _listViewUser = (ListView) findViewById(R.id.listview_users);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -166,7 +170,10 @@ public class SendedInvitationsActivity extends AppCompatActivity
                 case 1:
                     //Update data adapter and UI
                     _userListAdapter.addListItemToAdapter((ArrayList<User>)msg.obj);
-                    //Remove loading view after update listview
+                    int count = ((ArrayList<User>) msg.obj).size();
+                    if(count == 0){
+                        _informText.setVisibility(View.VISIBLE);
+                    }
                     _listViewUser.removeFooterView(_footerView);
                     break;
                 default:
@@ -184,11 +191,6 @@ public class SendedInvitationsActivity extends AppCompatActivity
                     _handler.sendEmptyMessage(0);
                     ArrayList<User> lstResult = task.getResult();
                     Message msg = _handler.obtainMessage(1, lstResult);
-                    /*try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
                     _handler.sendMessage(msg);
                 }
             });

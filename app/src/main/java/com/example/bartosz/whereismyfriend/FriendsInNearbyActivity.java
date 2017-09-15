@@ -1,10 +1,12 @@
 package com.example.bartosz.whereismyfriend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -50,6 +53,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FriendsInNearbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -69,6 +74,10 @@ public class FriendsInNearbyActivity extends AppCompatActivity
     double longitude;
     private User currentUser;
     private MapFragment mapFragment;
+    private Timer mTimer;
+    private Handler mHandler;
+    public static final int notify = 30000;
+    private String currentUserId;
 
     private static final String LOG_TAG = "MainActivity";
     private Set<GeoQuery> geoQueries = new HashSet<>();
@@ -106,28 +115,30 @@ public class FriendsInNearbyActivity extends AppCompatActivity
         _userManager = new UserManager();
         database = FirebaseDatabase.getInstance();
         _firebaseAuth = FirebaseAuth.getInstance();
-        String currentUserId = _firebaseAuth.getCurrentUser().getUid();
+        currentUserId = _firebaseAuth.getCurrentUser().getUid();
         _userLocationManager = new UserLocationManager();
         _userLocationManager.setCurrentUserLocation(currentUserId, latitude, longitude);
-        getCurrentUserData(currentUserId);
+        //getCurrentUserData(currentUserId);
         DatabaseReference ref = database.getReference("geofire");
         _geoFire = new GeoFire(ref);
         setupFirebase();
+        SetTimer();
     }
 
-    private void getCurrentUserData(String currentUserId) {
+    private void UpdateUserMarkersOnMap(String currentUserId) {
         final DatabaseReference reference = database.getReference("Users");
         reference.child(currentUserId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        map.clear();
                         currentUser = dataSnapshot.getValue(User.class);
                         LatLng myLocation = new LatLng(latitude, longitude);
                         Circle circle = map.addCircle(new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED));
                         circle.setVisible(true);
                         int zoom = getZoomLevel(circle);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
-                        fetchUsers();
+                        FetchUsers();
                         reference.removeEventListener(this);
                     }
 
@@ -138,7 +149,7 @@ public class FriendsInNearbyActivity extends AppCompatActivity
                 });
     }
 
-    private void fetchUsers(){
+    private void FetchUsers(){
         final GeoQuery geoQuery = _geoFire.queryAtLocation(new GeoLocation(latitude, longitude), currentUser.Range);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -236,6 +247,49 @@ public class FriendsInNearbyActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
+        mTimer.cancel();
+        int id = item.getItemId();
+
+        if (id == R.id.nav_mylocation) {
+            Intent intent = new Intent(FriendsInNearbyActivity.this, MyLocation.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.home) {
+            Intent intent = new Intent(FriendsInNearbyActivity.this, Home.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if(id == R.id.nav_friendsInNearby){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, FriendsInNearbyActivity.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
+            _firebaseAuth.signOut();
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.settings){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, Settings.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(FriendsInNearbyActivity.this, SearchAllUsers.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.nav_recived_invitations){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, RecivedInvitationsActivity.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.nav_sended_invitations){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, SendedInvitationsActivity.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(FriendsInNearbyActivity.this, MyFriendsListActivity.class);
+            startActivity(intent);
+            FriendsInNearbyActivity.this.finish();
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -259,5 +313,24 @@ public class FriendsInNearbyActivity extends AppCompatActivity
     private void setupFirebase() {
         DatabaseReference ref = database.getReference("geofire");
         _geoFire = new GeoFire(ref);
+    }
+
+    private void SetTimer(){
+        mTimer = new Timer();   //recreate new
+        mHandler = new Handler();
+        mTimer.scheduleAtFixedRate(new TimeDisplay(), 0, notify);
+    }
+
+    private class TimeDisplay extends TimerTask {
+        @Override
+        public void run() {
+            // run on another thread
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    UpdateUserMarkersOnMap(currentUserId);
+                }
+            });
+        }
     }
 }
