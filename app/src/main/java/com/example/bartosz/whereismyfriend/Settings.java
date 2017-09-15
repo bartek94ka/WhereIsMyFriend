@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -353,16 +354,19 @@ public class Settings extends AppCompatActivity
             Intent intent = new Intent(Settings.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             Settings.this.finish();
-        } else if(id == R.id.search_all_users) {
-            Intent intent = new Intent(Settings.this, SearchAllUsers.class);
+        } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(Settings.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
+            _firebaseAuth.signOut();
             startActivity(intent);
             Settings.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(Settings.this, Settings.class);
             startActivity(intent);
             Settings.this.finish();
-        } else if (id == R.id.nav_logout){
-            _firebaseAuth.signOut();
+        } else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(Settings.this, SearchAllUsers.class);
+            startActivity(intent);
             Settings.this.finish();
         } else if (id == R.id.nav_recived_invitations){
             Intent intent = new Intent(Settings.this, RecivedInvitationsActivity.class);

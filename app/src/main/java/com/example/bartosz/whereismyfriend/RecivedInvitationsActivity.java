@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -145,16 +146,19 @@ public class RecivedInvitationsActivity extends AppCompatActivity
             Intent intent = new Intent(RecivedInvitationsActivity.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
-        } else if(id == R.id.search_all_users) {
-            Intent intent = new Intent(RecivedInvitationsActivity.this, SearchAllUsers.class);
+        } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(RecivedInvitationsActivity.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
+            _firebaseAuth.signOut();
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(RecivedInvitationsActivity.this, Settings.class);
             startActivity(intent);
             RecivedInvitationsActivity.this.finish();
-        } else if (id == R.id.nav_logout){
-            _userManager.LogoutUser();
+        } else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(RecivedInvitationsActivity.this, SearchAllUsers.class);
+            startActivity(intent);
             RecivedInvitationsActivity.this.finish();
         } else if (id == R.id.nav_recived_invitations){
             Intent intent = new Intent(RecivedInvitationsActivity.this, RecivedInvitationsActivity.class);

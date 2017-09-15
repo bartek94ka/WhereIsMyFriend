@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -182,7 +183,7 @@ public class MyFriendLocation extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
-            Intent intent = new Intent(MyFriendLocation.this, MyFriendLocation.class);
+            Intent intent = new Intent(MyFriendLocation.this, MyLocation.class);
             startActivity(intent);
             MyFriendLocation.this.finish();
         } else if (id == R.id.home) {
@@ -194,7 +195,10 @@ public class MyFriendLocation extends AppCompatActivity
             startActivity(intent);
             MyFriendLocation.this.finish();
         } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(MyFriendLocation.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
             _firebaseAuth.signOut();
+            startActivity(intent);
             MyFriendLocation.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(MyFriendLocation.this, Settings.class);

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -128,7 +129,7 @@ public class UserDetailsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mylocation) {
-            Intent intent = new Intent(UserDetailsActivity.this, MyFriendLocation.class);
+            Intent intent = new Intent(UserDetailsActivity.this, MyLocation.class);
             startActivity(intent);
             UserDetailsActivity.this.finish();
         } else if (id == R.id.home) {
@@ -140,7 +141,10 @@ public class UserDetailsActivity extends AppCompatActivity
             startActivity(intent);
             UserDetailsActivity.this.finish();
         } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(UserDetailsActivity.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
             _firebaseAuth.signOut();
+            startActivity(intent);
             UserDetailsActivity.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(UserDetailsActivity.this, Settings.class);

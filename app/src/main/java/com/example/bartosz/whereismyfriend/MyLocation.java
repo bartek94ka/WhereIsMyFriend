@@ -215,7 +215,10 @@ public class MyLocation extends AppCompatActivity
             startActivity(intent);
             MyLocation.this.finish();
         } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(MyLocation.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
             _firebaseAuth.signOut();
+            startActivity(intent);
             MyLocation.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(MyLocation.this, Settings.class);
@@ -231,6 +234,10 @@ public class MyLocation extends AppCompatActivity
             MyLocation.this.finish();
         } else if (id == R.id.nav_sended_invitations){
             Intent intent = new Intent(MyLocation.this, SendedInvitationsActivity.class);
+            startActivity(intent);
+            MyLocation.this.finish();
+        } else if (id == R.id.nav_myfreindsList){
+            Intent intent = new Intent(MyLocation.this, MyFriendsListActivity.class);
             startActivity(intent);
             MyLocation.this.finish();
         }

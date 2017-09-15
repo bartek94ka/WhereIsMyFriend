@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.bartosz.whereismyfriend.Models.User;
+import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -280,16 +281,19 @@ public class SearchAllUsers extends AppCompatActivity
             Intent intent = new Intent(SearchAllUsers.this, FriendsInNearbyActivity.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
-        } else if(id == R.id.search_all_users) {
-            Intent intent = new Intent(SearchAllUsers.this, SearchAllUsers.class);
+        } else if (id == R.id.nav_logout){
+            Intent intent = new Intent(SearchAllUsers.this, LoginActivity.class);
+            stopService(new Intent(this, UpdateUserLocationService.class));
+            _firebaseAuth.signOut();
             startActivity(intent);
             SearchAllUsers.this.finish();
         } else if (id == R.id.settings){
             Intent intent = new Intent(SearchAllUsers.this, Settings.class);
             startActivity(intent);
             SearchAllUsers.this.finish();
-        } else if (id == R.id.nav_logout){
-            _firebaseAuth.signOut();
+        } else if(id == R.id.search_all_users) {
+            Intent intent = new Intent(SearchAllUsers.this, SearchAllUsers.class);
+            startActivity(intent);
             SearchAllUsers.this.finish();
         } else if (id == R.id.nav_recived_invitations){
             Intent intent = new Intent(SearchAllUsers.this, RecivedInvitationsActivity.class);
