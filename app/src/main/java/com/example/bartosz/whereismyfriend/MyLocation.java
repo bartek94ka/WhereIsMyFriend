@@ -124,8 +124,8 @@ public class MyLocation extends AppCompatActivity
 
     private void UpdateUserLocationOnMap(final String currentUserId)
     {
-        database.getReference("Users").child(currentUserId).
-                addValueEventListener(new ValueEventListener() {
+        final DatabaseReference reference = database.getReference("Users").child(currentUserId);
+        reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         map.clear();
@@ -144,6 +144,7 @@ public class MyLocation extends AppCompatActivity
                                 }
                             }
                         });
+                        reference.removeEventListener(this);
                     }
 
                     @Override

@@ -150,7 +150,7 @@ public class FriendsInNearbyActivity extends AppCompatActivity
     }
 
     private void FetchUsers(){
-        final GeoQuery geoQuery = _geoFire.queryAtLocation(new GeoLocation(latitude, longitude), currentUser.Range);
+        final GeoQuery geoQuery = _geoFire.queryAtLocation(new GeoLocation(latitude, longitude), currentUser.Range/1000);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {

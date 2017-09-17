@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -56,6 +57,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MyFriendLocation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -73,6 +76,10 @@ public class MyFriendLocation extends AppCompatActivity
     double longitude;
     private User currentUser;
     private MapFragment mapFragment;
+    private Timer mTimer;
+    private Handler mHandler;
+    public static final int notify = 5000;
+    String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,18 +109,19 @@ public class MyFriendLocation extends AppCompatActivity
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         database = FirebaseDatabase.getInstance();
         _firebaseAuth = FirebaseAuth.getInstance();
-        String currentUserId = _firebaseAuth.getCurrentUser().getUid();
-        getCurrentUserData(currentUserId);
+        currentUserId = _firebaseAuth.getCurrentUser().getUid();
         DatabaseReference ref = database.getReference("geofire");
         _geoFire = new GeoFire(ref);
 
         setupFirebase();
         _userLocationManager = new UserLocationManager();
-        _userLocationManager.setCurrentUserLocation(currentUserId, latitude, longitude);
+
+        SetTimer();
     }
 
-    private void getCurrentUserData(String currentUserId) {
-        database.getReference("Users").child(currentUserId).
+    private void GetUserDataLocation(String currentUserId) {
+        final DatabaseReference reference = database.getReference("Users");
+        reference.child(currentUserId).
                 addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -122,7 +130,6 @@ public class MyFriendLocation extends AppCompatActivity
                         LatLng myLocation = new LatLng(latitude, longitude);
                         CircleOptions circle = new CircleOptions().center(myLocation).radius(currentUser.Range).strokeColor(Color.RED);
                         final int zoom = getZoomLevel(circle);
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom - 1));
                         Intent intent = getIntent();
                         Bundle extras = intent.getExtras();
                         if(!extras.isEmpty()){
@@ -137,6 +144,7 @@ public class MyFriendLocation extends AppCompatActivity
                                 });
                             }
                         }
+                        reference.removeEventListener(this);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -245,5 +253,24 @@ public class MyFriendLocation extends AppCompatActivity
     private void setupFirebase() {
         DatabaseReference ref = database.getReference("geofire");
         _geoFire = new GeoFire(ref);
+    }
+
+    private void SetTimer(){
+        mTimer = new Timer();   //recreate new
+        mHandler = new Handler();
+        mTimer.scheduleAtFixedRate(new TimeDisplay(), 0, notify);
+    }
+
+    private class TimeDisplay extends TimerTask {
+        @Override
+        public void run() {
+            // run on another thread
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    GetUserDataLocation(currentUserId);
+                }
+            });
+        }
     }
 }

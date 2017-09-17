@@ -21,14 +21,13 @@
     <permission
         android:name="com.example.bartosz.whereismyfriend.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
     <uses-permission android:name="com.example.bartosz.whereismyfriend.permission.MAPS_RECEIVE" />
     >
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">

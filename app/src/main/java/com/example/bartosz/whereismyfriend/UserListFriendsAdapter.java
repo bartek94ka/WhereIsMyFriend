@@ -86,7 +86,6 @@ public class UserListFriendsAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     String userId = (String) v.getTag();
                     User user = GetUser(userId);
-                    deleteListItem(user);
                     Intent intent = new Intent(_context, MyFriendLocation.class);
                     intent.putExtra("userId",userId);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
