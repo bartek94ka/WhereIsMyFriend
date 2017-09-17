@@ -2,6 +2,7 @@ package com.example.bartosz.whereismyfriend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,14 +11,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.example.bartosz.whereismyfriend.Models.User;
 import com.example.bartosz.whereismyfriend.Services.UpdateUserLocationService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth _firebaseAuth;
+    private UserManager _userManager;
+
+    TextView _email;
+    TextView _fullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +45,11 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        _userManager = new UserManager();
         _firebaseAuth = FirebaseAuth.getInstance();
+
+        _fullName = (TextView) findViewById(R.id.navigation_FullName);
+        _email = (TextView) findViewById(R.id.navigation_Email);
 
         startService(new Intent(this, UpdateUserLocationService.class));
     }
@@ -53,21 +67,12 @@ public class Home extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.home, menu);
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

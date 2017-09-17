@@ -70,8 +70,6 @@ public class LoginActivity extends AppCompatActivity implements ActivityCompat.O
             @Override
             public void onClick(View v) {
                 LoginUser();
-                Intent registerIntent = new Intent(LoginActivity.this, Home.class);
-                LoginActivity.this.startActivity(registerIntent);
             }
         }));
 
@@ -92,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     private void GetUserPermision(){
-    // Here, thisActivity is the current activity
+        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.MAPS_RECEIVE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -101,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements ActivityCompat.O
             if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this,
                     Manifest.permission.MAPS_RECEIVE)) {
 
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.

@@ -34,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth _firebaseAuth;
     private DatabaseReference _databaseRef;
     private ProgressDialog _progressBar;
+    private UserManager _userManager;
 
     private EditText etEmail;
     private EditText etPassword;
@@ -41,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Button buttonRegister;
     private TextView tvLoginLink;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         _databaseRef = _database.getReference();
         _firebaseAuth = FirebaseAuth.getInstance();
 
+        _userManager = new UserManager();
         _progressBar = new ProgressDialog(this);
 
         etEmail = (EditText) findViewById(R.id.regEmail);
@@ -73,9 +76,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RegisterUser();
-                Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
-                RegisterActivity.this.startActivity(registerIntent);
-                RegisterActivity.this.finish();
             }
         });
     }
@@ -87,6 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(email))
         {
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!_userManager.isEmailValid(email)){
+            Toast.makeText(this, "Wrong email foramt. Please enter your email", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(password))
@@ -107,6 +111,9 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d("TAG", "createUserWithEmail:success");
                                 Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+                                Intent registerIntent = new Intent(RegisterActivity.this, CompleteRegisterActivity.class);
+                                RegisterActivity.this.startActivity(registerIntent);
+                                RegisterActivity.this.finish();
                             } else {
                                 Log.d("TAG", "createUserWithEmail:fail");
                                 Toast.makeText(RegisterActivity.this, "Could not register. Please try again", Toast.LENGTH_SHORT).show();
